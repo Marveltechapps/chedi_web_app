@@ -1,0 +1,323 @@
+/* ===== shared UI primitives ===== */
+
+.ch-btn {
+  border-radius: 2px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.ch-btn:disabled {
+  cursor: not-allowed;
+}
+
+.ch-btn-primary {
+  background: var(--forest-900);
+  color: var(--text-onDark);
+}
+.ch-btn-primary:hover:not(:disabled) {
+  background: var(--gold);
+  color: var(--forest-900);
+}
+.ch-btn-primary:disabled {
+  background: #a9b0a0;
+}
+
+.ch-btn-gold {
+  background: var(--gold-light);
+  color: var(--forest-900);
+}
+.ch-btn-gold:hover:not(:disabled) {
+  background: var(--bg-header);
+}
+
+.ch-btn-outline {
+  background: none;
+  border: 1px solid var(--border-muted);
+  color: var(--text-heading);
+}
+.ch-btn-outline:hover:not(:disabled) {
+  border-color: var(--forest-900);
+}
+
+.ch-btn-outline-muted {
+  background: none;
+  border: 1px solid var(--border-input);
+  color: var(--text-muted);
+}
+.ch-btn-outline-muted:hover:not(:disabled) {
+  border-color: var(--text-heading);
+  color: var(--text-heading);
+}
+
+.ch-btn-outline-dark {
+  background: none;
+  border: 1px solid var(--border-input);
+  color: var(--text-heading);
+}
+
+.ch-btn-link {
+  background: none;
+  border: none;
+  color: var(--gold);
+  padding: 0;
+}
+
+.ch-btn-link-muted {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 0;
+}
+
+.ch-btn-danger {
+  background: var(--error);
+  color: #fff;
+  border: none;
+}
+
+.ch-btn-danger-outline {
+  background: none;
+  border: 1px solid var(--error-border);
+  color: var(--error);
+}
+.ch-btn-danger-outline:hover:not(:disabled) {
+  background: var(--error-bg);
+}
+
+.ch-btn-plain {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ch-btn-dashed {
+  background: none;
+  border: 1px dashed var(--border-muted);
+  color: var(--text-heading);
+  border-radius: 6px;
+}
+.ch-btn-dashed:hover:not(:disabled) {
+  border-color: var(--text-heading);
+}
+
+/* ---- card ---- */
+.ch-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 8px;
+}
+
+/* ---- field ---- */
+.ch-field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: block;
+}
+.ch-field-input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 13px 14px;
+  border: 1px solid var(--border-input);
+  border-radius: 3px;
+  font-size: 15px;
+  background: var(--bg-input);
+  color: inherit;
+}
+.ch-field-input:focus {
+  outline: none;
+  border-color: var(--forest-600);
+}
+.ch-field-input::placeholder {
+  color: #a9ac9c;
+}
+
+/* ---- badge / pill ---- */
+.ch-badge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  white-space: nowrap;
+}
+.ch-badge-amber {
+  background: var(--amber-bg);
+  color: var(--gold);
+  border: 1px solid var(--amber-border);
+}
+.ch-badge-green {
+  background: var(--bg-login);
+  color: var(--forest-600);
+  border: 1px solid var(--border-dark);
+}
+.ch-badge-red {
+  background: #f4e9e6;
+  color: #a15642;
+  border: 1px solid #e6cfc7;
+}
+.ch-badge-neutral {
+  background: #f3efe4;
+  color: #8a7a4e;
+  border: 1px solid #e0d9c6;
+}
+
+/* ---- data row ---- */
+.ch-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border-row);
+  font-size: 14px;
+  gap: 12px;
+}
+.ch-row:last-child {
+  border-bottom: none;
+}
+.ch-row-k {
+  color: var(--text-muted);
+}
+.ch-row-v {
+  color: var(--text-heading);
+  font-weight: 600;
+  text-align: right;
+}
+.ch-row-total {
+  border-bottom: none;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-heading);
+  padding: 14px 0 4px;
+}
+.ch-row-total .ch-row-k {
+  color: var(--text-heading);
+}
+
+/* ---- radio row (payment method pickers) ---- */
+.ch-radio-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: var(--bg-input);
+  border: 1px solid var(--border-card);
+  font-size: 14px;
+  color: var(--text-heading);
+  font-weight: 600;
+}
+.ch-radio-row.is-selected {
+  background: var(--bg-login);
+  border-color: var(--gold);
+}
+.ch-radio-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+.ch-radio-row.is-selected .ch-radio-dot {
+  border-color: var(--forest-900);
+}
+.ch-radio-dot-fill {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--forest-900);
+}
+
+/* ---- toggle switch ---- */
+.ch-toggle {
+  width: 42px;
+  height: 24px;
+  border-radius: 20px;
+  border: none;
+  position: relative;
+  flex: 0 0 auto;
+  cursor: pointer;
+  background: var(--border-muted);
+  transition: background 0.15s ease;
+}
+.ch-toggle.is-on {
+  background: var(--forest-600);
+}
+.ch-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.2s ease;
+}
+.ch-toggle.is-on .ch-toggle-knob {
+  left: 20px;
+}
+
+/* ---- timeline ---- */
+.ch-timeline-row {
+  display: flex;
+  gap: 16px;
+}
+.ch-timeline-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--border-card-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex: 0 0 auto;
+}
+.ch-timeline-line {
+  width: 2px;
+  flex: 1;
+  min-height: 22px;
+}
+.ch-timeline-body {
+  padding-bottom: 20px;
+}
+
+/* ---- modal ---- */
+.ch-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 30, 24, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+.ch-modal-panel {
+  background: var(--bg-header);
+  border-radius: 10px;
+  width: 100%;
+  animation: chFade 0.2s ease both;
+}
+
+.ch-notif-row:hover {
+  border-color: #b98a2e;
+}
+
+/* ---- utility ---- */
+.ch-divider {
+  height: 1px;
+  background: var(--border-card-2);
+  margin: 10px 0;
+}

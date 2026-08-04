@@ -1,0 +1,137 @@
+/* ===== CHEDI CSA Web App — global styles ===== */
+
+:root {
+  --serif: 'Newsreader', serif;
+  --sans: 'Hanken Grotesk', system-ui, sans-serif;
+  --mono: 'Space Mono', monospace;
+
+  --forest-900: #1c3b2c;
+  --forest-800: #22432f;
+  --forest-700: #2a4a38;
+  --forest-600: #2e5a41;
+  --forest-mid: #335640;
+  --forest-line: #3a5545;
+  --forest-line-2: #2f4c3c;
+
+  --gold: #b98a2e;
+  --gold-light: #d9b45f;
+
+  --bg-page: #ece7d8;
+  --bg-app: #f0ece0;
+  --bg-header: #f6f3ea;
+  --bg-login: #eef2e9;
+  --bg-input: #faf8f2;
+  --bg-card: #fff;
+
+  --border-card: #e4ded0;
+  --border-card-2: #dbe0d1;
+  --border-input: #d8cfb8;
+  --border-muted: #c3bba6;
+  --border-row: #efe9db;
+  --border-dark: #cdd5be;
+
+  --text-heading: #1c3b2c;
+  --text-body: #4b5142;
+  --text-muted: #6f7566;
+  --text-faint: #9aa08d;
+  --text-strong: #3a4033;
+  --text-onDark: #f6f3ea;
+  --text-onDark-muted: #b6c1ac;
+  --text-onDark-faint: #8fa389;
+
+  --error: #b0361f;
+  --error-border: #e3b7ab;
+  --error-bg: #fdf1ed;
+  --error-bg-2: #f7efec;
+
+  --amber-bg: #fdf3dc;
+  --amber-border: #ecd9a8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-page);
+  font-family: var(--sans);
+  color: #22271f;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--forest-600);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--gold);
+}
+
+::selection {
+  background: var(--gold-light);
+  color: #1c3b2c;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@keyframes chFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes chSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ch-fade {
+  animation: chFade 0.3s ease both;
+}
+
+.ch-fade-slow {
+  animation: chFade 0.35s ease both;
+}
+
+.ch-spin {
+  animation: chSpin 0.8s linear infinite;
+}
+
+/* ---- scrollbars stay unobtrusive on the app shell ---- */
+.ch-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.ch-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-muted);
+  border-radius: 6px;
+}

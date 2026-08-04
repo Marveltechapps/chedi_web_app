@@ -1,0 +1,75 @@
+/* Shared responsive grid utilities used across the dashboard tabs.
+   Desktop values match the original design's fixed column counts;
+   breakpoints collapse them for tablet/mobile. */
+
+.ch-grid {
+  display: grid;
+}
+.ch-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.ch-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.ch-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+.ch-grid-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+.ch-grid-hero {
+  grid-template-columns: 1.5fr 1fr;
+}
+.ch-grid-detail {
+  grid-template-columns: 1.6fr 1fr;
+}
+.ch-grid-myplot {
+  grid-template-columns: 2fr 1fr;
+}
+.ch-grid-deliveries {
+  grid-template-columns: 1.3fr 1fr;
+}
+.ch-grid-settings {
+  grid-template-columns: 230px 1fr;
+}
+
+@media (max-width: 1000px) {
+  .ch-grid-6 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .ch-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .ch-grid-hero,
+  .ch-grid-detail,
+  .ch-grid-myplot,
+  .ch-grid-deliveries,
+  .ch-grid-settings {
+    grid-template-columns: 1fr;
+  }
+  .ch-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .ch-grid-2,
+  .ch-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .ch-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ch-grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .ch-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
