@@ -51,10 +51,18 @@ export default function SubscriptionTab({ app }) {
                 <div style={{ marginTop: 14 }}>
                   {c.rows.map((r, i) => <DataRow key={i} k={r.k} v={r.v} />)}
                 </div>
-                <div style={{ marginTop: 16, background: '#eef2e9', border: '1px solid #dbe0d1', borderRadius: 6, padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-                  <div style={{ fontSize: 13, color: '#4b5142' }}>Renewal bill for this cycle</div>
-                  <button type="button" onClick={c.onPayBill} className="ch-btn" style={styleObj(c.payStyle)}>{c.payLabel}</button>
-                </div>
+                {(c.billPaid || c.canRequestPayment) && (
+                  <div style={{ marginTop: 16, background: '#eef2e9', border: '1px solid #dbe0d1', borderRadius: 6, padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+                    <div style={{ fontSize: 13, color: '#4b5142' }}>Renewal bill for this cycle</div>
+                    <button
+                      type="button"
+                      onClick={c.onPayBill}
+                      disabled={Boolean(c.billPaid)}
+                      className="ch-btn"
+                      style={styleObj(c.payStyle)}
+                    >{c.payLabel}</button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -70,6 +78,9 @@ export default function SubscriptionTab({ app }) {
       {/* payment history */}
       <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 28, marginTop: 20 }}>
         <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 20, color: '#1c3b2c', margin: '0 0 14px' }}>Payment history</h3>
+        {!app.payments.length && (
+          <p style={{ fontSize: 14, color: '#6f7566', margin: 0 }}>No completed payments yet.</p>
+        )}
         {app.payments.map((p, i) => (
           <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid #efe9db', gap: 12, flexWrap: 'wrap' }}>
             <div>

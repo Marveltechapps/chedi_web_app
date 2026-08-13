@@ -55,7 +55,7 @@ export function mapSubscription(sub) {
     end: sub.cycleEndLabel || sub.end,
     billPaid: Boolean(sub.billPaid),
     status: sub.status || 'active',
-    nextBillDue: sub.nextBillDue,
+    nextBillDue: sub.nextBillDue || sub.cycleEnd,
     nextBillAmountFormatted: sub.nextBillAmountFormatted,
     plot: sub.plot ? mapPlot(sub.plot) : undefined,
     plan: sub.plan ? mapPlan(sub.plan) : undefined,
@@ -108,6 +108,19 @@ export function memberDisplayName(member, form) {
   const email = String(member?.email || form?.email || '').trim()
   if (email.includes('@')) return email.split('@')[0]
   return 'Member'
+}
+
+/** True when today's local calendar date is on or after a YYYY-MM-DD due date. */
+export function isOnOrAfterCalendarDate(ymd) {
+  const due = String(ymd || '').slice(0, 10)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(due)) return false
+  const now = new Date()
+  const today = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0'),
+  ].join('-')
+  return today >= due
 }
 
 export function relativeTime(iso) {

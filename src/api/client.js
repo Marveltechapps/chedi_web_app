@@ -118,7 +118,7 @@ export async function apiRequest(path, options = {}) {
     throw new ApiError({
       status: res.status,
       code: err.code || 'REQUEST_FAILED',
-      message: err.message || res.statusText || 'Request failed',
+      message: data?.message || err.message || res.statusText || 'Request failed',
       details: err.details || [],
       requestId: err.requestId,
     })

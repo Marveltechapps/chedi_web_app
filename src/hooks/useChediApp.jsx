@@ -22,6 +22,7 @@ import {
   mapPlot,
   mapSubscription,
   newIdempotencyKey,
+  isOnOrAfterCalendarDate,
   relativeTime,
 } from '../lib/mappers.js'
 import {
@@ -718,6 +719,7 @@ export default function useChediApp() {
     const subCards = s.subs.map((sub) => {
       const pl = plots.find((p) => p.key === sub.plotKey) || sub.plot || plots[0]
       const pn2 = plans.find((p) => p.key === sub.planKey) || sub.plan || plans[0]
+      const canRequestPayment = !sub.billPaid && isOnOrAfterCalendarDate(sub.nextBillDue)
       return {
         id: sub.id,
         isActive: activeSub && sub.id === activeSub.id,
@@ -737,6 +739,7 @@ export default function useChediApp() {
           },
         ],
         billPaid: sub.billPaid,
+        canRequestPayment,
         cardStyle: `background:#fff;border:1px solid ${activeSub && sub.id === activeSub.id ? accent : '#e4ded0'};border-radius:8px;padding:24px;margin-bottom:16px`,
         onView: async () => {
           patch({ activeSub: sub.id, appTab: 'plot', actionLoading: true })
@@ -749,21 +752,23 @@ export default function useChediApp() {
             patch({ actionLoading: false })
           }
         },
-        onPayBill: sub.billPaid
-          ? () => {}
-          : () => openPay('renew:' + sub.id, 'card', sub.nextBillAmountFormatted || sub.total),
+        onPayBill: canRequestPayment
+          ? () => openPay('renew:' + sub.id, 'card', sub.nextBillAmountFormatted || sub.total)
+          : () => {},
         payLabel: sub.billPaid ? 'Bill paid' : 'Request payment',
         payStyle: `flex:0 0 auto;border:none;padding:11px 20px;border-radius:2px;font-weight:600;font-size:14px;cursor:${sub.billPaid ? 'default' : 'pointer'};background:${sub.billPaid ? '#eef2e9' : '#1c3b2c'};color:${sub.billPaid ? '#9aa08d' : '#f6f3ea'}`,
       }
     })
 
     const payments = (s.paymentHistory.length
-      ? s.paymentHistory.map((p) => ({
-          label: p.label,
-          date: p.date,
-          amount: p.amountFormatted,
-          ref: p.ref,
-        }))
+      ? s.paymentHistory
+          .filter((p) => p.status === 'succeeded')
+          .map((p) => ({
+            label: p.label,
+            date: p.date,
+            amount: p.amountFormatted,
+            ref: p.ref,
+          }))
       : []
     ).map((p) => ({
       ...p,
