@@ -4,8 +4,11 @@ import {
   getRefreshToken,
   saveSession,
 } from '../lib/session.js'
+import { networkErrorMessage, resolveApiBase } from '../lib/apiBase.js'
 
-const API_BASE = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')
+function apiBase() {
+  return resolveApiBase()
+}
 
 export class ApiError extends Error {
   constructor({ status, code, message, details = [], requestId }) {
@@ -24,7 +27,7 @@ async function refreshAccessToken() {
   const refreshToken = getRefreshToken()
   if (!refreshToken) throw new ApiError({ status: 401, code: 'UNAUTHORIZED', message: 'Session expired' })
 
-  const res = await fetch(`${API_BASE}/auth/refresh`, {
+  const res = await fetch(`${apiBase()}/auth/refresh`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify({ refreshToken }),
@@ -84,7 +87,7 @@ export async function apiRequest(path, options = {}) {
 
   let res
   try {
-    res = await fetch(`${API_BASE}${path.startsWith('/') ? path : `/${path}`}`, {
+    res = await fetch(`${apiBase()}${path.startsWith('/') ? path : `/${path}`}`, {
       method,
       headers: reqHeaders,
       body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -93,7 +96,7 @@ export async function apiRequest(path, options = {}) {
     throw new ApiError({
       status: 0,
       code: 'NETWORK_ERROR',
-      message: 'Network error. Check your connection and try again.',
+      message: networkErrorMessage(),
     })
   }
 
@@ -127,5 +130,5 @@ export async function apiRequest(path, options = {}) {
 }
 
 export function getApiBase() {
-  return API_BASE
+  return apiBase()
 }

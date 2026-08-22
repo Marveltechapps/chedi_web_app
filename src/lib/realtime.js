@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client'
+import { resolveSocketBase } from './apiBase.js'
 
 export const REALTIME_EVENTS = [
   'customer:created',
@@ -23,13 +24,7 @@ export const REALTIME_EVENTS = [
 ]
 
 function socketBaseUrl() {
-  const explicit = import.meta.env.VITE_SOCKET_URL
-  if (explicit) return String(explicit).replace(/\/$/, '')
-  const api = String(import.meta.env.VITE_API_URL || '/api')
-  if (/^https?:\/\//i.test(api)) {
-    return api.replace(/\/api\/v1\/?$/i, '').replace(/\/api\/?$/i, '')
-  }
-  return undefined
+  return resolveSocketBase()
 }
 
 let socket = null
