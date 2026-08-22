@@ -32,6 +32,11 @@ export default defineConfig({
           })
         },
       },
+      '/socket.io': {
+        target: process.env.VITE_PROXY_TARGET || 'http://127.0.0.1:4000',
+        changeOrigin: true,
+        ws: true,
+      },
     },
   },
 })

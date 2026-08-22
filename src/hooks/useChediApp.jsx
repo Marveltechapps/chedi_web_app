@@ -4,6 +4,7 @@ import { downloadReceipt, TERMS_TEXT, PRIVACY_TEXT } from '../logic/receipt.js'
 import Icon from '../components/icons/Icon.jsx'
 import {
   clearSession,
+  getAccessToken,
   getRefreshToken,
   hasSession,
   saveSession,
@@ -51,6 +52,7 @@ import {
   supportApi,
 } from '../api/index.js'
 import { ApiError } from '../api/client.js'
+import { connectRealtime, disconnectRealtime, subscribeRealtime, REALTIME_EVENTS } from '../lib/realtime.js'
 
 const ACCENT = '#b98a2e'
 
@@ -81,6 +83,7 @@ export default function useChediApp() {
   }, [])
 
   const forceLogout = useCallback((notice = '') => {
+    disconnectRealtime()
     clearSession()
     setState((prev) => ({
       ...initialState,
@@ -261,6 +264,115 @@ export default function useChediApp() {
       alive = false
     }
   }, [forceLogout, loadMemberWorkspace, patch])
+
+  const loadMemberWorkspaceRef = useRef(loadMemberWorkspace)
+  loadMemberWorkspaceRef.current = loadMemberWorkspace
+  const forceLogoutRef = useRef(forceLogout)
+  forceLogoutRef.current = forceLogout
+  const memberReloadTimer = useRef(null)
+  const scheduleMemberReload = () => {
+    if (memberReloadTimer.current) clearTimeout(memberReloadTimer.current)
+    memberReloadTimer.current = setTimeout(() => {
+      void loadMemberWorkspaceRef.current().catch(() => undefined)
+    }, 250)
+  }
+
+  useEffect(() => {
+    if (state.route !== 'app' || !state.isMember) {
+      disconnectRealtime()
+      return
+    }
+
+    connectRealtime({
+      kind: 'member',
+      getToken: getAccessToken,
+      onReconnect: () => {
+        void loadMemberWorkspaceRef.current().catch(() => undefined)
+      },
+    })
+
+    const unsubscribe = subscribeRealtime(REALTIME_EVENTS, (event, payload) => {
+      if (event === 'customer:deleted') {
+        forceLogoutRef.current('Your account has been deleted.')
+        return
+      }
+
+      if (event.startsWith('customer:address:') && Array.isArray(payload.addresses)) {
+        const addresses = payload.addresses.map(mapAddress).filter(Boolean)
+        setState((prev) => {
+          const def = addresses.find((a) => a.def) || addresses[0]
+          return {
+            ...prev,
+            addresses,
+            form: def
+              ? { ...prev.form, address: def.line, city: def.city, pin: def.pin }
+              : prev.form,
+          }
+        })
+        return
+      }
+
+      if (
+        (event === 'customer:profile_updated' || event === 'customer:updated') &&
+        (payload.member || payload.profile)
+      ) {
+        const member = payload.member || {}
+        const profile = payload.profile || {}
+        const nextName = member.name || profile.name
+        const nextEmail = member.email || profile.email
+        const nextPhone = member.phoneDisplay || profile.phoneDisplay
+        setState((prev) => {
+          const nextMember = prev.member
+            ? {
+                ...prev.member,
+                ...(nextName ? { name: nextName, firstName: String(nextName).trim().split(/\s+/)[0] } : {}),
+                ...(nextEmail ? { email: nextEmail } : {}),
+                ...(nextPhone ? { phoneDisplay: nextPhone } : {}),
+              }
+            : prev.member
+          if (nextMember) saveSession({ member: nextMember })
+          return {
+            ...prev,
+            member: nextMember,
+            form:
+              prev.profileMode === 'edit'
+                ? prev.form
+                : {
+                    ...prev.form,
+                    ...(nextName ? { name: nextName } : {}),
+                    ...(nextEmail ? { email: nextEmail } : {}),
+                  },
+            sec: nextPhone ? { ...prev.sec, mobile: nextPhone } : prev.sec,
+          }
+        })
+      }
+
+      if (event === 'notification:created' && payload.notification) {
+        setState((prev) => ({
+          ...prev,
+          notifications: [payload.notification, ...(prev.notifications || [])],
+        }))
+      }
+
+      if (
+        event.startsWith('payment') ||
+        event.startsWith('subscription:') ||
+        event === 'delivery:updated' ||
+        event === 'basket:updated' ||
+        event === 'plot:updated' ||
+        event === 'crop:updated' ||
+        event === 'cancellation:updated' ||
+        event === 'payment_method:updated'
+      ) {
+        scheduleMemberReload()
+      }
+    })
+
+    return () => {
+      unsubscribe()
+      if (memberReloadTimer.current) clearTimeout(memberReloadTimer.current)
+    }
+  }, [state.route, state.isMember])
 
   // OTP resend countdown
   useEffect(() => {
