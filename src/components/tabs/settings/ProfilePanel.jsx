@@ -6,7 +6,7 @@ import FormError from '../../ui/FormError.jsx'
 export default function ProfilePanel({ app }) {
   return (
     <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 28, maxWidth: 600 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 22 }}>
+      <div className="ch-page-head" style={{ alignItems: 'flex-start', marginBottom: 22 }}>
         <div>
           <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 24, color: '#1c3b2c', margin: '0 0 6px' }}>Profile</h3>
           <p style={{ fontSize: 14, color: '#6f7566', margin: 0 }}>Your personal details for your Farm Club account.</p>
@@ -32,7 +32,7 @@ export default function ProfilePanel({ app }) {
             <TextField label="Full name" value={app.draftName} onChange={app.onDraftName} placeholder="Your name" inputStyle={{ padding: '12px 14px' }} error={app.draftErrors?.name} />
             <TextField label="Email" value={app.draftEmail} onChange={app.onDraftEmail} type="email" placeholder="you@email.com" inputStyle={{ padding: '12px 14px' }} error={app.draftErrors?.email} />
           </div>
-          <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
+          <div className="ch-actions" style={{ marginTop: 24 }}>
             <Button variant="outline" style={{ padding: '13px 24px', fontSize: 15 }} onClick={app.cancelProfile}>Cancel</Button>
             <Button variant="primary" style={{ flex: 1, padding: 13, fontSize: 15 }} onClick={app.submitProfile} disabled={app.actionLoading}>{app.profSaveLabel}</Button>
           </div>

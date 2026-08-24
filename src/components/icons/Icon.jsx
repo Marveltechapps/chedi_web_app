@@ -65,6 +65,9 @@ export default function Icon({ name, stroke = '#2e5a41', size = 20, strokeWidth 
     case 'download':
       kids = <>{p('M12 4v11')}{p('M7 11l5 5 5-5')}{p('M5 20h14')}</>
       break
+    case 'menu':
+      kids = <>{ln(4, 7, 20, 7)}{ln(4, 12, 20, 12)}{ln(4, 17, 20, 17)}</>
+      break
     default:
       kids = null
   }

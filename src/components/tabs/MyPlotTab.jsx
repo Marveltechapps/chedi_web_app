@@ -26,7 +26,7 @@ export default function MyPlotTab({ app }) {
           )}
           <div className="ch-grid ch-grid-myplot" style={{ gap: 20, alignItems: 'start' }}>
             <div>
-              <div style={{ height: 320, borderRadius: 8, overflow: 'hidden', position: 'relative', border: '1px solid #cdd5be' }}>
+              <div className="ch-media-hero" style={{ height: 320, borderRadius: 8, overflow: 'hidden', position: 'relative', border: '1px solid #cdd5be' }}>
                 <img src={app.heroPlotImg} alt={app.plotName} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                 <span style={{ position: 'absolute', top: 16, left: 16, fontFamily: "'Space Mono',monospace", fontSize: 11, color: '#fff', background: 'rgba(28,59,44,.7)', padding: '5px 9px', borderRadius: 2 }}>
                   {app.plotName} · wide view

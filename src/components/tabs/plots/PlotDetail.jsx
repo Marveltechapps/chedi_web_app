@@ -10,7 +10,7 @@ export default function PlotDetail({ app }) {
       <Button variant="link-muted" onClick={app.backToList} style={{ fontSize: 14, marginBottom: 16 }}>← Back to plots</Button>
       <div className="ch-grid ch-grid-detail" style={{ gap: 20, alignItems: 'start' }}>
         <div>
-          <div style={{ height: 300, borderRadius: 8, overflow: 'hidden', position: 'relative', border: '1px solid #cdd5be' }}>
+          <div className="ch-media-hero" style={{ height: 300, borderRadius: 8, overflow: 'hidden', position: 'relative', border: '1px solid #cdd5be' }}>
             <img src={app.selPlotImg} alt={app.selPlotName} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
             <span style={{ position: 'absolute', top: 16, left: 16, fontFamily: "'Space Mono',monospace", fontSize: 11, color: '#fff', background: 'rgba(28,59,44,.7)', padding: '5px 9px', borderRadius: 2 }}>
               {app.selPlotName} · wide view

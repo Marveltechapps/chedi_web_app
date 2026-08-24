@@ -33,6 +33,100 @@
   grid-template-columns: 230px 1fr;
 }
 
+/* ---- layout helpers (aliases cover both naming variants in the app) ---- */
+.ch-page-head,
+.ch-page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ch-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ch-form-row,
+.ch-form-row {
+  display: flex;
+  gap: 14px;
+}
+
+.ch-welcome-banner,
+.ch-welcome-banner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.ch-welcome-copy,
+.ch-welcome-copy {
+  flex: 1;
+  min-width: 180px;
+}
+
+.ch-welcome-meta,
+.ch-welcome-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.ch-media-hero,
+.ch-media-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.ch-settings-nav {
+  background: #fff;
+  border: 1px solid #e4ded0;
+  border-radius: 8px;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+}
+
+.ch-share-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ch-auth-header,
+.ch-auth-header {
+  min-height: 74px;
+  border-bottom: 1px solid #dbe0d1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  background: #f6f3ea;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ch-auth-body,
+.ch-auth-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.ch-join-progress,
+.ch-join-progress {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 34px;
+}
+
 @media (max-width: 1000px) {
   .ch-grid-6 {
     grid-template-columns: repeat(3, 1fr);
@@ -53,9 +147,27 @@
   .ch-grid-3 {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .ch-settings-nav {
+    position: static;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .ch-settings-nav button {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    white-space: nowrap;
+    border-left: none !important;
+    border-radius: 20px !important;
+    padding: 8px 14px !important;
+  }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .ch-grid-2,
   .ch-grid-3 {
     grid-template-columns: 1fr;
@@ -66,10 +178,69 @@
   .ch-grid-6 {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .ch-form-row,
+  .ch-form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ch-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .ch-actions > * {
+    width: 100%;
+    flex: none !important;
+  }
+
+  .ch-welcome-meta,
+  .ch-welcome-meta {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ch-media-hero,
+  .ch-media-hero {
+    height: 210px !important;
+    min-height: 210px !important;
+  }
+
+  .ch-auth-header,
+  .ch-auth-header {
+    min-height: 60px;
+    padding: 10px 16px;
+  }
+
+  .ch-auth-body,
+  .ch-auth-body {
+    padding: 24px 16px;
+    align-items: flex-start;
+  }
+
+  .ch-join-progress,
+  .ch-join-progress {
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+}
+
+@media (max-width: 520px) {
+  .ch-grid-4 {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 420px) {
-  .ch-grid-4 {
+  .ch-grid-6 {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .ch-share-table span[style*="120px"] {
+    flex-basis: 72px !important;
   }
 }

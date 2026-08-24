@@ -10,7 +10,7 @@ import AccountPanel from './AccountPanel.jsx'
 export default function SettingsTab({ app }) {
   return (
     <div className="ch-fade-slow ch-grid ch-grid-settings" style={{ gap: 24, alignItems: 'start' }}>
-      <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 10, position: 'sticky', top: 0 }}>
+      <div className="ch-settings-nav">
         {app.settingsNav.map((i, idx) => (
           <button key={idx} type="button" onClick={i.onClick} className="ch-btn" style={styleObj(i.style)}>
             <span>{i.label}</span>

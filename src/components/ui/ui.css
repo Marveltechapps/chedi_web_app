@@ -176,17 +176,21 @@
   border-bottom: 1px solid var(--border-row);
   font-size: 14px;
   gap: 12px;
+  min-width: 0;
 }
 .ch-row:last-child {
   border-bottom: none;
 }
 .ch-row-k {
   color: var(--text-muted);
+  min-width: 0;
 }
 .ch-row-v {
   color: var(--text-heading);
   font-weight: 600;
   text-align: right;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .ch-row-total {
   border-bottom: none;
@@ -308,7 +312,23 @@
   background: var(--bg-header);
   border-radius: 10px;
   width: 100%;
+  max-width: 100%;
   animation: chFade 0.2s ease both;
+}
+
+@media (max-width: 640px) {
+  .ch-modal-overlay {
+    padding: 12px 12px max(12px, env(safe-area-inset-bottom, 0px));
+    align-items: flex-end;
+  }
+  .ch-modal-panel {
+    max-height: 92dvh;
+    overflow: auto;
+    border-radius: 12px 12px 8px 8px;
+  }
+  .ch-row {
+    flex-wrap: wrap;
+  }
 }
 
 .ch-notif-row:hover {

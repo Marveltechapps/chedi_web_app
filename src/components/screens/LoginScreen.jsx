@@ -5,14 +5,14 @@ import { styleObj } from '../../logic/styleObj.js'
 
 export default function LoginScreen({ app }) {
   return (
-    <div style={{ minHeight: '100vh', background: '#eef2e9', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ height: 74, borderBottom: '1px solid #dbe0d1', display: 'flex', alignItems: 'center', padding: '0 32px', background: '#f6f3ea' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+    <div style={{ minHeight: '100dvh', background: '#eef2e9', display: 'flex', flexDirection: 'column' }}>
+      <div className="ch-auth-header">
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
           <span style={{ fontFamily: "'Newsreader',serif", fontSize: 24, fontWeight: 600, letterSpacing: '.14em', color: '#1c3b2c' }}>CHEDI</span>
           <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, letterSpacing: '.14em', color: '#b98a2e', textTransform: 'uppercase' }}>CSA Member App</span>
         </div>
       </div>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
+      <div className="ch-auth-body">
         <div style={{ width: '100%', maxWidth: 420 }}>
           <div style={{ textAlign: 'center', marginBottom: 26 }}>
             <h2 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 32, color: '#1c3b2c', margin: 0 }}>Welcome back</h2>

@@ -5,16 +5,16 @@ export default function OverviewTab({ app }) {
   return (
     <div className="ch-fade-slow">
       {/* Welcome basket (all members) */}
-      <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 22, display: 'flex', alignItems: 'center', gap: 20, marginBottom: 20 }}>
+      <div className="ch-welcome-banner" style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 22, marginBottom: 20 }}>
         <div style={{ flex: '0 0 74px', height: 74, borderRadius: 6, overflow: 'hidden', border: '1px solid #cdd5be' }}>
           <img src={app.welcomeImg} alt="Welcome basket" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         </div>
-        <div style={{ flex: 1 }}>
+        <div className="ch-welcome-copy">
           <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: '#b98a2e', letterSpacing: '.06em' }}>WELCOME GIFT · INCLUDED WITH ₹500</div>
           <div style={{ fontFamily: "'Newsreader',serif", fontSize: 22, color: '#1c3b2c', marginTop: 3 }}>Your complimentary welcome basket is on its way</div>
           <div style={{ fontSize: 13, color: '#6f7566', marginTop: 2 }}>Seasonal vegetable sample box · arriving {app.welcomeEta}</div>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+        <div className="ch-welcome-meta">
           <Badge tone="amber">In transit</Badge>
           <Button variant="link" onClick={app.openWelcome} style={{ fontSize: 13 }}>Track basket →</Button>
         </div>
@@ -44,7 +44,7 @@ export default function OverviewTab({ app }) {
       {app.hasPlotV && (
         <div>
           <div className="ch-grid ch-grid-hero" style={{ gap: 20 }}>
-            <div style={{ background: '#1c3b2c', borderRadius: 8, overflow: 'hidden', position: 'relative', minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+            <div className="ch-media-hero" style={{ background: '#1c3b2c', borderRadius: 8, overflow: 'hidden', position: 'relative', minHeight: 260, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
               <img src={app.heroPlotImg} alt="Your plot" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
               <span style={{ position: 'absolute', top: 16, left: 16, fontFamily: "'Space Mono',monospace", fontSize: 11, color: '#cdd5c4', background: 'rgba(28,59,44,.7)', padding: '5px 9px', borderRadius: 2 }}>
                 real photo · your plot, this week
@@ -65,7 +65,7 @@ export default function OverviewTab({ app }) {
           </div>
 
           <div style={{ marginTop: 28 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <div className="ch-page-head" style={{ alignItems: 'baseline' }}>
               <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 24, color: '#1c3b2c', margin: 0 }}>What's growing now</h3>
               <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 12, color: '#6f7566' }}>July 2026</span>
             </div>

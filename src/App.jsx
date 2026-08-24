@@ -36,6 +36,7 @@ export default function App() {
             fontSize: 13,
             display: 'flex',
             justifyContent: 'space-between',
+            flexWrap: 'wrap',
             gap: 12,
           }}
         >

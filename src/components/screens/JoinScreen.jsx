@@ -5,8 +5,8 @@ import Icon from '../icons/Icon.jsx'
 
 export default function JoinScreen({ app }) {
   return (
-    <div style={{ minHeight: '100vh', background: '#eef2e9', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ height: 74, borderBottom: '1px solid #dbe0d1', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 32px', background: '#f6f3ea' }}>
+    <div style={{ minHeight: '100dvh', background: '#eef2e9', display: 'flex', flexDirection: 'column' }}>
+      <div className="ch-auth-header">
         <span style={{ fontFamily: "'Newsreader',serif", fontSize: 24, fontWeight: 600, letterSpacing: '.14em', color: '#1c3b2c' }}>CHEDI</span>
         <button
           type="button"
@@ -20,9 +20,9 @@ export default function JoinScreen({ app }) {
           Cancel
         </button>
       </div>
-      <div style={{ flex: 1, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '48px 24px' }}>
+      <div className="ch-auth-body" style={{ alignItems: 'flex-start' }}>
         <div style={{ width: '100%', maxWidth: 640 }}>
-          <div style={{ display: 'flex', gap: 10, marginBottom: 34 }}>
+          <div className="ch-join-progress">
             {app.joinProgress.map((s, i) => (
               <div style={{ flex: 1 }} key={i}>
                 <div style={{ height: 4, borderRadius: 2, background: s.bar }} />
@@ -38,8 +38,8 @@ export default function JoinScreen({ app }) {
               <FormError message={app.joinFormError} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <TextField label="Full name" value={app.form.name} onChange={app.onName} placeholder="Priya Balan" error={app.joinErrors?.name} autoComplete="name" />
-                <div style={{ display: 'flex', gap: 14 }}>
-                  <div style={{ flex: 1 }}>
+                <div className="ch-form-row">
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <TextField
                       label="Mobile"
                       value={app.form.phone}
@@ -50,7 +50,7 @@ export default function JoinScreen({ app }) {
                       autoComplete="tel"
                     />
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <TextField
                       label="Email"
                       value={app.form.email}
@@ -63,11 +63,11 @@ export default function JoinScreen({ app }) {
                   </div>
                 </div>
                 <TextField label="Delivery address" value={app.form.address} onChange={app.onAddress} placeholder="Flat, street, neighborhood" error={app.joinErrors?.address} autoComplete="street-address" />
-                <div style={{ display: 'flex', gap: 14 }}>
-                  <div style={{ flex: 2 }}>
+                <div className="ch-form-row">
+                  <div style={{ flex: 2, minWidth: 0 }}>
                     <TextField label="City" value={app.form.city} onChange={app.onCity} placeholder="Chennai" error={app.joinErrors?.city} autoComplete="address-level2" />
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <TextField label="PIN" value={app.form.pin} onChange={app.onPin} placeholder="600020" error={app.joinErrors?.pin} inputMode="numeric" maxLength={6} autoComplete="postal-code" />
                   </div>
                 </div>
@@ -97,7 +97,7 @@ export default function JoinScreen({ app }) {
                   <span>Total due</span><span>₹500</span>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
+              <div className="ch-actions" style={{ marginTop: 24 }}>
                 <Button variant="outline" style={{ padding: '15px 24px', fontSize: 15 }} onClick={app.prevJoin}>Back</Button>
                 <Button variant="primary" style={{ flex: 1, padding: 15, fontSize: 16 }} onClick={app.payMembership} disabled={app.actionLoading}>
                   Request payment — ₹500

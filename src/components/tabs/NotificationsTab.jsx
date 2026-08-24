@@ -3,7 +3,7 @@ import Button from '../ui/Button.jsx'
 export default function NotificationsTab({ app }) {
   return (
     <div className="ch-fade-slow" style={{ maxWidth: 680 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+      <div className="ch-page-head" style={{ marginBottom: 16 }}>
         <p style={{ fontSize: 14, color: '#6f7566', margin: 0 }}>Recent activity on your plot, deliveries and account.</p>
         <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
           {app.notifHasItems && (
@@ -28,7 +28,7 @@ export default function NotificationsTab({ app }) {
           >
             <div style={{ flex: '0 0 36px', height: 36, borderRadius: '50%', background: '#eef2e9', border: '1px solid #cdd5be', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{n.iconEl}</div>
             <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 15, color: '#1c3b2c', fontWeight: 600 }}>{n.title}</span>
                 <span style={{ fontSize: 12, color: '#9aa08d', flex: '0 0 auto' }}>{n.time}</span>
               </div>

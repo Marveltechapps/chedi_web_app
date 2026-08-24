@@ -7,7 +7,7 @@ function ShareTable({ eyebrow, title, desc, rows, note }) {
       <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, letterSpacing: '.14em', color: '#b98a2e', textTransform: 'uppercase' }}>{eyebrow}</div>
       <h4 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 24, color: '#1c3b2c', margin: '6px 0 2px' }}>{title}</h4>
       <p style={{ fontSize: 14, color: '#6f7566', margin: '0 0 16px' }}>{desc}</p>
-      <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, overflow: 'hidden' }}>
+      <div className="ch-share-table" style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, overflow: 'hidden' }}>
         <div style={{ display: 'flex', background: '#eef2e9', padding: '12px 18px', fontFamily: "'Space Mono',monospace", fontSize: 11, letterSpacing: '.06em', color: '#6f7566', textTransform: 'uppercase', borderBottom: '1px solid #dbe0d1' }}>
           <span style={{ flex: '0 0 40px' }}>#</span>
           <span style={{ flex: 1 }}>Vegetable</span>
@@ -107,7 +107,7 @@ export default function PlotPlan({ app }) {
       )}
 
       {pending && (
-        <div style={{ marginTop: 22, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <div className="ch-actions" style={{ marginTop: 22 }}>
           <Button variant="primary" style={{ padding: '15px 30px', fontSize: 16 }} onClick={app.goPlots}>
             Back to plots
           </Button>

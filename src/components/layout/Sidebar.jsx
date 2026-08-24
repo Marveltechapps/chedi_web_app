@@ -1,46 +1,66 @@
 import './layout.css'
 import { styleObj } from '../../logic/styleObj.js'
+import Icon from '../icons/Icon.jsx'
 
-export default function Sidebar({ app }) {
+export default function Sidebar({ app, open = false, onClose, onNavigate }) {
+  const go = (fn) => () => {
+    fn?.()
+    onNavigate?.()
+  }
+
+  const notifActive = app.tabNotifs
+  const notifStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    width: '100%',
+    textAlign: 'left',
+    background: notifActive ? 'rgba(217,180,95,.16)' : 'none',
+    border: 'none',
+    color: notifActive ? '#f6f3ea' : '#a9b8a0',
+    padding: '11px 12px',
+    borderRadius: 4,
+    fontSize: 14,
+    fontWeight: 600,
+    cursor: 'pointer',
+    borderLeft: `3px solid ${notifActive ? '#d9b45f' : 'transparent'}`,
+  }
+
   return (
-    <aside className="ch-sidebar" style={{ width: 246, flex: '0 0 246px', background: '#1c3b2c', height: '100vh', padding: '26px 18px', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ padding: '0 8px 22px', borderBottom: '1px solid #2f4c3c' }}>
-        <div style={{ fontFamily: "'Newsreader',serif", fontSize: 24, fontWeight: 600, letterSpacing: '.14em', color: '#f6f3ea' }}>CHEDI</div>
-        <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 10, color: '#d9b45f', letterSpacing: '.08em', marginTop: 2 }}>CSA MEMBER APP</div>
+    <aside id="app-sidebar" className={`ch-sidebar${open ? ' is-open' : ''}`}>
+      <div className="ch-sidebar-brand">
+        <div>
+          <div className="ch-sidebar-logo">CHEDI</div>
+          <div className="ch-sidebar-tag">CSA MEMBER APP</div>
+        </div>
+        <button type="button" className="ch-sidebar-close" onClick={onClose} aria-label="Close menu">
+          <Icon name="close" stroke="#f6f3ea" size={16} strokeWidth={1.8} />
+        </button>
       </div>
 
-      <nav className="ch-sidebar-nav" style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 20 }}>
+      <nav className="ch-sidebar-nav" aria-label="Main">
         {app.appNav.map((n, i) => (
-          <button key={i} type="button" onClick={n.onClick} style={styleObj(n.style)}>
+          <button key={i} type="button" onClick={go(n.onClick)} style={styleObj(n.style)}>
             {n.iconEl}
             <span style={{ flex: 1, textAlign: 'left' }}>{n.label}</span>
             {n.dot && <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#d9b45f' }} />}
           </button>
         ))}
+        <button type="button" className="ch-sidebar-mobile-only" onClick={go(app.goNotifs)} style={notifStyle}>
+          <Icon name="bell" stroke={notifActive ? '#f6f3ea' : '#a9b8a0'} size={19} strokeWidth={1.7} />
+          <span style={{ flex: 1, textAlign: 'left' }}>Notifications</span>
+        </button>
       </nav>
 
-      <div style={{ marginTop: 'auto', padding: '16px 8px 0', borderTop: '1px solid #2f4c3c' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: '50%',
-              background: 'repeating-linear-gradient(45deg,#2a4a38,#2a4a38 6px,#335640 6px,#335640 12px)',
-              border: '1px solid #3a5545',
-            }}
-          />
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 14, color: '#f6f3ea', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{app.displayName}</div>
-            <div style={{ fontSize: 11, color: '#8fa389' }}>{app.memberStatus}</div>
+      <div className="ch-sidebar-user">
+        <div className="ch-sidebar-user-row">
+          <div className="ch-sidebar-avatar" />
+          <div className="ch-sidebar-user-text">
+            <div className="ch-sidebar-name">{app.displayName}</div>
+            <div className="ch-sidebar-status">{app.memberStatus}</div>
           </div>
         </div>
-        <button
-          type="button"
-          onClick={app.askLogout}
-          className="ch-sidebar-logout"
-          style={{ width: '100%', marginTop: 14, background: 'none', border: '1px solid #3a5545', color: '#b6c1ac', padding: 9, borderRadius: 2, fontSize: 12, cursor: 'pointer' }}
-        >
+        <button type="button" onClick={go(app.askLogout)} className="ch-sidebar-logout">
           Log out
         </button>
       </div>

@@ -7,8 +7,10 @@
   border-color: #b98a2e;
 }
 
+/* ===== App shell ===== */
 .ch-app-shell {
-  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
   background: #f0ece0;
   display: flex;
   overflow: hidden;
@@ -17,7 +19,7 @@
 .ch-app-main {
   flex: 1;
   min-width: 0;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -26,49 +28,311 @@
 .ch-app-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 34px;
   width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ch-app-content-inner {
   max-width: 1120px;
   margin: 0 auto;
   width: 100%;
+  min-width: 0;
 }
 
-@media (max-width: 900px) {
-  .ch-app-shell {
-    flex-direction: column;
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
+/* ===== Header ===== */
+.ch-header {
+  flex: 0 0 auto;
+  height: 72px;
+  background: #f6f3ea;
+  border-bottom: 1px solid #e0d9c6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 34px;
+  z-index: 20;
+  gap: 12px;
+  min-width: 0;
+}
+
+.ch-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ch-header-title {
+  font-family: 'Newsreader', serif;
+  font-size: 22px;
+  color: #1c3b2c;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ch-header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+.ch-header-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: #6f7566;
+  white-space: nowrap;
+}
+
+.ch-hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: #eef2e9;
+  border: 1px solid #cdd5be;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.ch-hamburger:hover,
+.ch-hamburger:focus-visible {
+  border-color: #b98a2e;
+  outline: none;
+}
+
+.ch-notif-bell {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #eef2e9;
+  border: 1px solid #cdd5be;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.ch-notif-dot {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #b98a2e;
+  border: 1.5px solid #eef2e9;
+}
+
+/* ===== Sidebar ===== */
+.ch-sidebar {
+  width: 246px;
+  flex: 0 0 246px;
+  background: #1c3b2c;
+  height: 100dvh;
+  padding: 26px 18px;
+  display: flex;
+  flex-direction: column;
+  z-index: 80;
+}
+
+.ch-sidebar-brand {
+  padding: 0 8px 22px;
+  border-bottom: 1px solid #2f4c3c;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ch-sidebar-logo {
+  font-family: 'Newsreader', serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #f6f3ea;
+}
+
+.ch-sidebar-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: #d9b45f;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+.ch-sidebar-close {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #3a5545;
+  background: none;
+  border-radius: 6px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+.ch-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 20px;
+  overflow-y: auto;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ch-sidebar-user {
+  margin-top: auto;
+  padding: 16px 8px 0;
+  border-top: 1px solid #2f4c3c;
+  flex: 0 0 auto;
+}
+
+.ch-sidebar-user-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.ch-sidebar-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: repeating-linear-gradient(45deg, #2a4a38, #2a4a38 6px, #335640 6px, #335640 12px);
+  border: 1px solid #3a5545;
+  flex: 0 0 auto;
+}
+
+.ch-sidebar-user-text {
+  min-width: 0;
+}
+
+.ch-sidebar-name {
+  font-size: 14px;
+  color: #f6f3ea;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ch-sidebar-status {
+  font-size: 11px;
+  color: #8fa389;
+}
+
+.ch-sidebar-logout {
+  width: 100%;
+  margin-top: 14px;
+  background: none;
+  border: 1px solid #3a5545;
+  color: #b6c1ac;
+  padding: 9px;
+  border-radius: 2px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ch-sidebar-mobile-only {
+  display: none;
+}
+
+.ch-nav-overlay {
+  display: none;
+}
+
+/* Tablet & mobile: hamburger + slide-out drawer */
+@media (max-width: 960px) {
+  .ch-hamburger {
+    display: flex;
   }
+
+  .ch-sidebar-close {
+    display: flex;
+  }
+
+  .ch-sidebar-mobile-only {
+    display: flex;
+  }
+
+  .ch-nav-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 30, 24, 0.5);
+    z-index: 70;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+
+  .ch-nav-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   .ch-sidebar {
-    width: 100% !important;
-    flex: 0 0 auto !important;
-    height: auto !important;
-    padding: 16px !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    width: min(300px, 88vw);
+    flex: none;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    padding: max(18px, env(safe-area-inset-top, 0px)) 18px max(18px, env(safe-area-inset-bottom, 0px));
+    box-shadow: none;
   }
-  .ch-sidebar-nav {
-    flex-direction: row !important;
-    flex-wrap: wrap;
-    margin-top: 14px !important;
+
+  .ch-sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: 12px 0 40px rgba(0, 0, 0, 0.28);
   }
-  .ch-sidebar-nav button {
-    width: auto !important;
-    flex: 1 1 auto;
+
+  .ch-header {
+    height: 64px;
+    padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(12px, env(safe-area-inset-left, 0px));
   }
-  .ch-app-main {
-    height: auto;
+
+  .ch-header-title {
+    font-size: 18px;
   }
+
   .ch-app-content {
-    overflow-y: visible;
-    padding: 18px !important;
+    padding: 18px 16px;
   }
 }
 
 @media (max-width: 640px) {
   .ch-app-content {
-    padding: 14px !important;
+    padding: 14px 12px;
+  }
+
+  .ch-header-badge {
+    display: none;
+  }
+
+  .ch-header-title {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 420px) {
+  .ch-header {
+    height: 58px;
   }
 }

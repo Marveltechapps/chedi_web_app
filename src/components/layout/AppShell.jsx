@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import './layout.css'
 import Sidebar from './Sidebar.jsx'
 import AppHeader from './AppHeader.jsx'
@@ -11,12 +12,49 @@ import SettingsTab from '../tabs/settings/SettingsTab.jsx'
 import LegalModal from '../modals/LegalModal.jsx'
 import ConfirmModal from '../modals/ConfirmModal.jsx'
 
+const NAV_BREAKPOINT = 960
+
 export default function AppShell({ app }) {
+  const [navOpen, setNavOpen] = useState(false)
+
+  useEffect(() => {
+    setNavOpen(false)
+  }, [app.appTitle])
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > NAV_BREAKPOINT) setNavOpen(false)
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  useEffect(() => {
+    if (!navOpen) return undefined
+    const onKey = (e) => {
+      if (e.key === 'Escape') setNavOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prev
+    }
+  }, [navOpen])
+
+  const closeNav = () => setNavOpen(false)
+
   return (
     <div className="ch-app-shell">
-      <Sidebar app={app} />
+      <div
+        className={`ch-nav-overlay${navOpen ? ' is-open' : ''}`}
+        onClick={closeNav}
+        aria-hidden="true"
+      />
+      <Sidebar app={app} open={navOpen} onClose={closeNav} onNavigate={closeNav} />
       <main className="ch-app-main">
-        <AppHeader app={app} />
+        <AppHeader app={app} navOpen={navOpen} onToggleNav={() => setNavOpen((v) => !v)} />
         <div className="ch-app-content ch-scroll">
           <div className="ch-app-content-inner">
             {app.tabOverview && <OverviewTab app={app} />}

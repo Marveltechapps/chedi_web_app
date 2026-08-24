@@ -8,13 +8,13 @@ export default function DeliveriesTab({ app }) {
     <div className="ch-fade-slow">
       {app.noPlot && (
         <>
-          <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 26, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+          <div className="ch-welcome-banner" style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 26, marginBottom: 20 }}>
             <div style={{ flex: '0 0 60px', height: 60, borderRadius: 6, background: 'repeating-linear-gradient(45deg,#dbe1d1,#dbe1d1 7px,#e6ebdd 7px,#e6ebdd 14px)', border: '1px solid #cdd5be' }} />
-            <div style={{ flex: 1 }}>
+            <div className="ch-welcome-copy">
               <div style={{ fontFamily: "'Newsreader',serif", fontSize: 20, color: '#1c3b2c' }}>Welcome basket · in transit</div>
               <div style={{ fontSize: 13, color: '#6f7566' }}>Your complimentary sample box arrives {app.welcomeEta}.</div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
+            <div className="ch-welcome-meta">
               <Badge tone="amber">In transit</Badge>
               <Button variant="link" onClick={app.openWelcome} style={{ fontSize: 13 }}>Track basket →</Button>
             </div>
@@ -38,7 +38,7 @@ export default function DeliveriesTab({ app }) {
           )}
           <div className="ch-grid ch-grid-deliveries" style={{ gap: 20, alignItems: 'start' }}>
             <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 26 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="ch-page-head">
                 <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 22, color: '#1c3b2c', margin: 0 }}>This week's delivery</h3>
                 <Badge tone="amber" style={{ padding: '4px 10px' }}>Out for delivery soon</Badge>
               </div>

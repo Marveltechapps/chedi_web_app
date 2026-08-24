@@ -9,7 +9,7 @@ export default function PlotDone({ app }) {
         <p style={{ fontSize: 15, color: '#4b5142', margin: '12px 0 0' }}>
           Request {app.pendingPaymentRef || ''} for {app.pendingPlanName || 'your plan'} on {app.selPlotName} is with the admin team. You cannot book this plan again until they collect payment and activate it.
         </p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 26 }}>
+        <div className="ch-actions" style={{ justifyContent: 'center', marginTop: 26 }}>
           <Button variant="primary" style={{ padding: '14px 28px', fontSize: 15 }} onClick={app.goPlots}>Back to plots</Button>
           <Button variant="outline" style={{ padding: '14px 24px', fontSize: 15 }} onClick={app.goOverview}>Overview</Button>
         </div>
@@ -24,7 +24,7 @@ export default function PlotDone({ app }) {
       <p style={{ fontSize: 15, color: '#4b5142', margin: '12px 0 0' }}>
         {app.selPlotName} is leased to your family and our farmers are starting cultivation. Your first weekly delivery is scheduled — track it any time.
       </p>
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 26 }}>
+      <div className="ch-actions" style={{ justifyContent: 'center', marginTop: 26 }}>
         <Button variant="primary" style={{ padding: '14px 28px', fontSize: 15 }} onClick={app.goMyPlot}>View my plot</Button>
         <Button variant="outline" style={{ padding: '14px 24px', fontSize: 15 }} onClick={app.goDeliveries}>See delivery schedule</Button>
       </div>

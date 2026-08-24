@@ -55,6 +55,13 @@ import { ApiError } from '../api/client.js'
 import { connectRealtime, disconnectRealtime, subscribeRealtime, REALTIME_EVENTS } from '../lib/realtime.js'
 
 const ACCENT = '#b98a2e'
+const OTP_RESEND_SECONDS = 60
+
+function otpResendWaitSeconds(res) {
+  const raw = Number(res?.resendAvailableInSeconds ?? res?.data?.resendAvailableInSeconds)
+  if (Number.isFinite(raw) && raw >= OTP_RESEND_SECONDS) return Math.round(raw)
+  return OTP_RESEND_SECONDS
+}
 
 function errMessage(err, fallback = 'Something went wrong. Please try again.') {
   if (!err) return fallback
@@ -983,7 +990,7 @@ export default function useChediApp() {
               error: '',
               notice: res.notice || `Code sent to ${res.email || s.login.email}.`,
               locked: false,
-              resendIn: res.resendAvailableInSeconds || 30,
+              resendIn: otpResendWaitSeconds(res),
               resends: 0,
               demoOtp: res.demoOtp || '',
               email: res.email || s.login.email.trim(),
@@ -1010,7 +1017,7 @@ export default function useChediApp() {
               attempts: 0,
               error: '',
               locked: false,
-              resendIn: res.resendAvailableInSeconds || 30,
+              resendIn: otpResendWaitSeconds(res),
               notice: res.notice || 'A new code has been sent to your email.',
               demoOtp: res.demoOtp || l.demoOtp,
             },

@@ -24,7 +24,7 @@ export default function SubscriptionTab({ app }) {
       </div>
 
       <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 28 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+        <div className="ch-page-head" style={{ marginBottom: 4 }}>
           <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 22, color: '#1c3b2c', margin: 0 }}>{app.subHeading}</h3>
           {app.hasPlotV && (
             <Button variant="outline" style={{ padding: '9px 16px', fontSize: 13 }} onClick={app.leaseAnother}>+ Lease another plot</Button>
@@ -36,7 +36,7 @@ export default function SubscriptionTab({ app }) {
             <p style={{ fontSize: 13, color: '#6f7566', margin: '0 0 16px' }}>Each plot is a separate subscription with its own cycle and renewal bill.</p>
             {app.subCards.map((c) => (
               <div key={c.id} style={styleObj(c.cardStyle)}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                       <span style={{ fontFamily: "'Newsreader',serif", fontSize: 20, color: '#1c3b2c' }}>{c.title}</span>

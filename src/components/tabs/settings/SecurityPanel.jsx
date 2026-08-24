@@ -5,7 +5,7 @@ import FormError from '../../ui/FormError.jsx'
 export default function SecurityPanel({ app }) {
   return (
     <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 28, maxWidth: 600 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+      <div className="ch-page-head" style={{ marginBottom: 6 }}>
         <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 24, color: '#1c3b2c', margin: 0 }}>Login &amp; security</h3>
         {app.savedSecurity && <span style={{ fontSize: 14, color: '#2e5a41', fontWeight: 600 }}>✓ Updated</span>}
       </div>
@@ -41,7 +41,7 @@ export default function SecurityPanel({ app }) {
             inputMode="tel"
             autoComplete="tel"
           />
-          <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+          <div className="ch-actions" style={{ marginTop: 16 }}>
             <Button variant="outline" style={{ padding: '11px 20px', fontSize: 14 }} onClick={app.secCancel}>Cancel</Button>
             <Button variant="primary" style={{ flex: 1, padding: 11, fontSize: 14 }} onClick={app.secSend}>Send OTP</Button>
           </div>
@@ -70,7 +70,7 @@ export default function SecurityPanel({ app }) {
             placeholder="••••"
             style={{ margin: 0, fontSize: 18, letterSpacing: '.3em', textAlign: 'center' }}
           />
-          <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+          <div className="ch-actions" style={{ marginTop: 16 }}>
             <Button variant="outline" style={{ padding: '11px 20px', fontSize: 14 }} onClick={app.secCancel}>Cancel</Button>
             <Button variant="primary" style={{ flex: 1, padding: 11, fontSize: 14 }} onClick={app.secVerify}>Verify &amp; update</Button>
           </div>

@@ -1,22 +1,29 @@
 import './layout.css'
 import Icon from '../icons/Icon.jsx'
 
-export default function AppHeader({ app }) {
+export default function AppHeader({ app, navOpen = false, onToggleNav }) {
   return (
-    <div style={{ flex: '0 0 auto', height: 72, background: '#f6f3ea', borderBottom: '1px solid #e0d9c6', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 34px', zIndex: 20 }}>
-      <div style={{ fontFamily: "'Newsreader',serif", fontSize: 22, color: '#1c3b2c' }}>{app.appTitle}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 12, color: '#6f7566' }}>{app.plotBadge}</div>
+    <header className="ch-header">
+      <div className="ch-header-left">
         <button
           type="button"
-          onClick={app.goNotifs}
-          className="ch-notif-bell"
-          style={{ position: 'relative', width: 36, height: 36, borderRadius: '50%', background: '#eef2e9', border: '1px solid #cdd5be', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+          className="ch-hamburger"
+          onClick={onToggleNav}
+          aria-label={navOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={navOpen}
+          aria-controls="app-sidebar"
         >
+          <Icon name={navOpen ? 'close' : 'menu'} stroke="#1c3b2c" size={18} strokeWidth={1.8} />
+        </button>
+        <div className="ch-header-title">{app.appTitle}</div>
+      </div>
+      <div className="ch-header-right">
+        <div className="ch-header-badge">{app.plotBadge}</div>
+        <button type="button" onClick={app.goNotifs} className="ch-notif-bell" aria-label="Notifications">
           <Icon name="bell" stroke="#2e5a41" size={18} strokeWidth={1.7} />
-          <span style={{ position: 'absolute', top: 6, right: 7, width: 8, height: 8, borderRadius: '50%', background: '#b98a2e', border: '1.5px solid #eef2e9' }} />
+          <span className="ch-notif-dot" />
         </button>
       </div>
-    </div>
+    </header>
   )
 }
