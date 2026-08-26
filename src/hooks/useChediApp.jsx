@@ -73,6 +73,14 @@ function buildPaymentBody() {
   return { method: 'payment_request' }
 }
 
+/** Keep date/status on delivery timeline labels; drop clock times like "8:40 PM" or "by 10 AM". */
+function dateOnlyTrackingLabel(label) {
+  return String(label || '')
+    .replace(/,\s*by\s+\d{1,2}(?::\d{2})?\s*(?:AM|PM)/gi, '')
+    .replace(/,\s*\d{1,2}:\d{2}\s*(?:AM|PM)/gi, '')
+    .trim()
+}
+
 export default function useChediApp() {
   const [state, setState] = useState(initialState)
   const stateRef = useRef(state)
@@ -432,12 +440,39 @@ export default function useChediApp() {
         error: '',
         paymentId: null,
         result: null,
+        nonRefundableAgreed: false,
       },
     })
   }
 
+  const requestPayConfirm = () => {
+    const p = stateRef.current.pay
+    patch({ pay: { ...p, view: 'confirm', error: '', nonRefundableAgreed: false } })
+  }
+
+  const backPayConfirm = () => {
+    const p = stateRef.current.pay
+    patch({ pay: { ...p, view: 'form', error: '', nonRefundableAgreed: false } })
+  }
+
+  const agreePayNonRefundable = () => {
+    const p = stateRef.current.pay
+    if (p.nonRefundableAgreed) return
+    patch({ pay: { ...p, nonRefundableAgreed: true, error: '' } })
+  }
+
   const submitPay = async () => {
     const p = stateRef.current.pay
+    if (!p.nonRefundableAgreed) {
+      patch({
+        pay: {
+          ...p,
+          view: 'confirm',
+          error: 'Please confirm that you have read and agree to the non-refundable condition.',
+        },
+      })
+      return
+    }
     patch({ pay: { ...p, view: 'processing', error: '' }, actionLoading: true })
     const body = buildPaymentBody()
     const key = newIdempotencyKey()
@@ -479,7 +514,7 @@ export default function useChediApp() {
         actionLoading: false,
         pay: {
           ...stateRef.current.pay,
-          view: 'form',
+          view: 'confirm',
           error: errMessage(err, 'Could not send payment request. Please try again.'),
         },
       })
@@ -812,7 +847,7 @@ export default function useChediApp() {
 
     const deliverySteps = (s.deliveries?.currentWeek?.tracking || []).map((d) => ({
       title: d.title,
-      time: d.timeLabel || d.time,
+      time: dateOnlyTrackingLabel(d.timeLabel || d.time),
       done: d.done,
       active: d.active,
     }))
@@ -1351,6 +1386,17 @@ export default function useChediApp() {
         }))
       })(),
       goPayMethods: () => patch({ appTab: 'settings', settingsView: 'payments' }),
+      goProfile: () =>
+        patch({
+          appTab: 'settings',
+          settingsView: 'profile',
+          addrEdit: null,
+          payAdd: null,
+          saved: '',
+          profileMode: 'view',
+          addrErrors: {},
+          draftErrors: {},
+        }),
       backToList: () => patch({ leaseView: 'list' }),
       toDetail: () => patch({ leaseView: 'detail' }),
       toPlan: async () => {
@@ -1407,9 +1453,14 @@ export default function useChediApp() {
       payOpen: s.pay.open,
       payAmount: s.pay.amount,
       payForm: s.pay.view === 'form',
+      payConfirm: s.pay.view === 'confirm',
       payProcessing: s.pay.view === 'processing',
       paySuccess: s.pay.view === 'success',
       payError: s.pay.error,
+      payNonRefundableAgreed: Boolean(s.pay.nonRefundableAgreed),
+      requestPayConfirm: () => requestPayConfirm(),
+      backPayConfirm: () => backPayConfirm(),
+      agreePayNonRefundable: () => agreePayNonRefundable(),
       paySuccessMessage:
         s.pay.result?.notice ||
         (s.pay.result?.payment?.ref

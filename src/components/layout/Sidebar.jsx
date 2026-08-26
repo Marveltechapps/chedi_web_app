@@ -53,13 +53,13 @@ export default function Sidebar({ app, open = false, onClose, onNavigate }) {
       </nav>
 
       <div className="ch-sidebar-user">
-        <div className="ch-sidebar-user-row">
+        <button type="button" className="ch-sidebar-profile" onClick={go(app.goProfile)} aria-label="Open profile">
           <div className="ch-sidebar-avatar" />
           <div className="ch-sidebar-user-text">
             <div className="ch-sidebar-name">{app.displayName}</div>
             <div className="ch-sidebar-status">{app.memberStatus}</div>
           </div>
-        </div>
+        </button>
         <button type="button" onClick={go(app.askLogout)} className="ch-sidebar-logout">
           Log out
         </button>

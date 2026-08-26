@@ -2,6 +2,7 @@
 import Modal from '../ui/Modal.jsx'
 import Button from '../ui/Button.jsx'
 import Icon from '../icons/Icon.jsx'
+import RadioRow from '../ui/RadioRow.jsx'
 
 export default function PaymentSheetModal({ app }) {
   return (
@@ -40,13 +41,59 @@ export default function PaymentSheetModal({ app }) {
           </div>
 
           <div style={{ padding: '16px 24px 20px', borderTop: '1px solid #efe9db', flex: '0 0 auto', background: '#fff' }}>
-            <Button variant="primary" style={{ width: '100%', padding: 15, fontSize: 16 }} onClick={app.submitPay} disabled={app.actionLoading}>
+            <Button variant="primary" style={{ width: '100%', padding: 15, fontSize: 16 }} onClick={app.requestPayConfirm} disabled={app.actionLoading}>
               Send payment request
             </Button>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 12, fontSize: 12, color: '#8a8f7f' }}>
               <Icon name="lock" stroke="#8a8f7f" size={13} strokeWidth={1.8} />
               No card details collected in-app
             </div>
+          </div>
+        </>
+      )}
+
+      {app.payConfirm && (
+        <>
+          <div style={{ padding: 24, overflowY: 'auto', flex: '1 1 auto' }}>
+            <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 22, color: '#1c3b2c', margin: 0 }}>Confirm before you continue</h3>
+            <p style={{ fontSize: 15, color: '#4b5142', margin: '12px 0 0', lineHeight: 1.55 }}>
+              Once the payment is completed, it is non-refundable.
+            </p>
+            <div style={{ marginTop: 18 }} role="radiogroup" aria-label="Non-refundable payment confirmation">
+              <RadioRow
+                selected={app.payNonRefundableAgreed}
+                onSelect={app.agreePayNonRefundable}
+                label="I have read and agree that once the payment is completed, it is non-refundable."
+                style={{ alignItems: 'flex-start', fontWeight: 500, lineHeight: 1.45, whiteSpace: 'normal' }}
+              />
+            </div>
+            {app.payError && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 14, fontSize: 13, color: '#b0361f' }}>
+                <Icon name="alert" stroke="#b0361f" size={15} strokeWidth={1.8} />
+                <span>{app.payError}</span>
+              </div>
+            )}
+          </div>
+
+          <div style={{ padding: '16px 24px 20px', borderTop: '1px solid #efe9db', flex: '0 0 auto', background: '#fff' }}>
+            <div className="ch-actions">
+              <Button variant="outline" style={{ flex: 1, padding: 15, fontSize: 15 }} onClick={app.backPayConfirm} disabled={app.actionLoading}>
+                Back
+              </Button>
+              <Button
+                variant="primary"
+                style={{ flex: 1, padding: 15, fontSize: 16 }}
+                onClick={app.submitPay}
+                disabled={!app.payNonRefundableAgreed || app.actionLoading}
+              >
+                Continue
+              </Button>
+            </div>
+            {!app.payNonRefundableAgreed && (
+              <p style={{ margin: '10px 0 0', fontSize: 12, color: '#8a8f7f', textAlign: 'center' }}>
+                Select the radio button above to enable Continue
+              </p>
+            )}
           </div>
         </>
       )}

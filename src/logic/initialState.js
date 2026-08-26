@@ -101,5 +101,6 @@ export const initialState = {
     error: '',
     paymentId: null,
     result: null,
+    nonRefundableAgreed: false,
   },
 }

@@ -202,10 +202,28 @@
   flex: 0 0 auto;
 }
 
-.ch-sidebar-user-row {
+.ch-sidebar-profile {
   display: flex;
   align-items: center;
   gap: 11px;
+  width: 100%;
+  margin: 0;
+  padding: 4px 2px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ch-sidebar-profile:hover .ch-sidebar-avatar,
+.ch-sidebar-profile:focus-visible .ch-sidebar-avatar {
+  border-color: #d9b45f;
+}
+
+.ch-sidebar-profile:focus-visible {
+  outline: 1px solid #d9b45f;
+  outline-offset: 2px;
 }
 
 .ch-sidebar-avatar {
