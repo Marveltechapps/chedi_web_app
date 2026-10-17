@@ -78,9 +78,15 @@ export default function PlotPlan({ app }) {
               {p.price}<span style={{ fontSize: 14, fontWeight: 400, color: '#6f7566' }}> /yr</span>
             </div>
             <div style={{ fontSize: 13, color: '#6f7566', marginTop: 4 }}>{p.plots} · {p.size}</div>
+            <div style={{ fontSize: 13, color: '#1c3b2c', fontWeight: 600, marginTop: 4 }}>{p.limitLabel}</div>
             {p.awaitingActivation && (
               <div style={{ marginTop: 14, padding: '12px 14px', background: '#f7ecd4', border: '1px solid #e6d3a4', borderRadius: 6, fontSize: 13, fontWeight: 600, color: '#8a5a12', lineHeight: 1.45 }}>
                 Waiting for your plan activation
+              </div>
+            )}
+            {p.overLimit && (
+              <div style={{ marginTop: 14, padding: '12px 14px', background: '#f4efe4', border: '1px solid #e0d4b8', borderRadius: 6, fontSize: 13, fontWeight: 600, color: '#6f5b2e', lineHeight: 1.45 }}>
+                Plot limit reached for this plan
               </div>
             )}
             <div style={{ height: 1, background: '#e4ded0', margin: '16px 0' }} />

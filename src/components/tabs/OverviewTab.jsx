@@ -11,12 +11,25 @@ export default function OverviewTab({ app }) {
         </div>
         <div className="ch-welcome-copy">
           <div style={{ fontFamily: "'Space Mono',monospace", fontSize: 11, color: '#b98a2e', letterSpacing: '.06em' }}>WELCOME GIFT · INCLUDED WITH ₹500</div>
-          <div style={{ fontFamily: "'Newsreader',serif", fontSize: 22, color: '#1c3b2c', marginTop: 3 }}>Your complimentary welcome basket is on its way</div>
-          <div style={{ fontSize: 13, color: '#6f7566', marginTop: 2 }}>Seasonal vegetable sample box · arriving {app.welcomeEta}</div>
+          <div style={{ fontFamily: "'Newsreader',serif", fontSize: 22, color: '#1c3b2c', marginTop: 3 }}>
+            {app.welcomeReceived ? 'Your complimentary welcome basket has been received' : 'Your complimentary welcome basket is on its way'}
+          </div>
+          <div style={{ fontSize: 13, color: '#6f7566', marginTop: 2 }}>
+            {app.welcomeReceived
+              ? `Token of Love · received ${app.welcomeEta}`
+              : `Token of Love · arriving ${app.welcomeEta}`}
+          </div>
         </div>
         <div className="ch-welcome-meta">
-          <Badge tone="amber">In transit</Badge>
-          <Button variant="link" onClick={app.openWelcome} style={{ fontSize: 13 }}>Track basket →</Button>
+          <Badge tone={app.welcomeReceived ? 'green' : 'amber'}>{app.welcomeReceived ? 'Received' : 'In transit'}</Badge>
+          {!app.welcomeReceived && (
+            <Button variant="primary" onClick={app.confirmWelcomeGift} disabled={app.actionLoading} style={{ padding: '10px 16px', fontSize: 13 }}>
+              {app.actionLoading ? 'Saving…' : 'Gift received'}
+            </Button>
+          )}
+          {app.welcomeGiftError && (
+            <div style={{ fontSize: 12, color: '#b0361f', marginTop: 4 }}>{app.welcomeGiftError}</div>
+          )}
         </div>
       </div>
 

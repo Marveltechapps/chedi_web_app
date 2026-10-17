@@ -48,6 +48,7 @@ function createProxy(proxyTarget) {
       },
     },
     '/health': common,
+    '/uploads': common,
     '/socket.io': { ...common, ws: true },
   }
 }

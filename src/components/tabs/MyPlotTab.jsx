@@ -33,7 +33,7 @@ export default function MyPlotTab({ app }) {
                 </span>
               </div>
               <div className="ch-grid ch-grid-4" style={{ gap: 12, marginTop: 12 }}>
-                {app.plotGallery.map((p, i) => (
+                {(app.myPlotGallery || app.plotGallery).map((p, i) => (
                   <div key={i} style={{ height: 96, borderRadius: 6, overflow: 'hidden', position: 'relative', border: '1px solid #cdd5be' }}>
                     <img src={p.img} alt={p.label} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                     <span style={{ position: 'absolute', bottom: 6, left: 6, fontFamily: "'Space Mono',monospace", fontSize: 9, color: '#fff', background: 'rgba(28,59,44,.7)', padding: '2px 5px', borderRadius: 2 }}>{p.label}</span>

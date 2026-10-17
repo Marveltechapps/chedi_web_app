@@ -1,6 +1,7 @@
 export const initialState = {
   bootLoading: true,
   actionLoading: false,
+  dataExporting: false,
   globalError: '',
   route: 'join',
   joinStep: 1,
@@ -101,6 +102,5 @@ export const initialState = {
     error: '',
     paymentId: null,
     result: null,
-    nonRefundableAgreed: false,
   },
 }

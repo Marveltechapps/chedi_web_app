@@ -19,6 +19,8 @@ export const membershipApi = {
       idempotencyKey,
     }),
   me: () => apiRequest('/membership/me', { auth: true }),
+  receiveWelcome: () =>
+    apiRequest('/membership/welcome-basket/received', { method: 'POST', auth: true, body: {} }),
 }
 
 export const meApi = {
@@ -32,6 +34,9 @@ export const meApi = {
   setActiveSubscription: (subscriptionId) =>
     apiRequest('/me/active-subscription', { method: 'PUT', auth: true, body: { subscriptionId } }),
   deleteAccount: () => apiRequest('/me', { method: 'DELETE', auth: true, body: { confirmation: 'DELETE' } }),
+  requestDataExport: () => apiRequest('/me/data-export', { method: 'POST', auth: true, body: {} }),
+  downloadDataExport: (exportId) =>
+    apiRequest(`/me/data-export/${encodeURIComponent(exportId)}/download`, { auth: true }),
 }
 
 export const plotsApi = {

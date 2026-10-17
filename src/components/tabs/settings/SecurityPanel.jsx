@@ -35,7 +35,7 @@ export default function SecurityPanel({ app }) {
             label="New mobile number"
             value={app.secNewMobile}
             onChange={app.onSecNew}
-            placeholder="+91 98xxx xxxxx"
+            placeholder="Enter your phone"
             inputStyle={{ padding: '12px 14px' }}
             error={app.secError}
             inputMode="tel"

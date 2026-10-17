@@ -9,14 +9,26 @@ export default function DeliveriesTab({ app }) {
       {app.noPlot && (
         <>
           <div className="ch-welcome-banner" style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 26, marginBottom: 20 }}>
-            <div style={{ flex: '0 0 60px', height: 60, borderRadius: 6, background: 'repeating-linear-gradient(45deg,#dbe1d1,#dbe1d1 7px,#e6ebdd 7px,#e6ebdd 14px)', border: '1px solid #cdd5be' }} />
+            <div style={{ flex: '0 0 60px', height: 60, borderRadius: 6, overflow: 'hidden', border: '1px solid #cdd5be' }}>
+              <img src="/token-of-love.jpg" alt="Token of Love" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            </div>
             <div className="ch-welcome-copy">
-              <div style={{ fontFamily: "'Newsreader',serif", fontSize: 20, color: '#1c3b2c' }}>Welcome basket · in transit</div>
-              <div style={{ fontSize: 13, color: '#6f7566' }}>Your complimentary sample box arrives {app.welcomeEta}.</div>
+              <div style={{ fontFamily: "'Newsreader',serif", fontSize: 20, color: '#1c3b2c' }}>
+                {app.welcomeReceived ? 'Welcome basket · received' : 'Welcome basket · in transit'}
+              </div>
+              <div style={{ fontSize: 13, color: '#6f7566' }}>
+                {app.welcomeReceived
+                  ? `Your complimentary sample box was received ${app.welcomeEta}.`
+                  : `Your complimentary sample box arrives ${app.welcomeEta}.`}
+              </div>
             </div>
             <div className="ch-welcome-meta">
-              <Badge tone="amber">In transit</Badge>
-              <Button variant="link" onClick={app.openWelcome} style={{ fontSize: 13 }}>Track basket →</Button>
+              <Badge tone={app.welcomeReceived ? 'green' : 'amber'}>{app.welcomeReceived ? 'Received' : 'In transit'}</Badge>
+              {!app.welcomeReceived && (
+                <Button variant="link" onClick={app.confirmWelcomeGift} disabled={app.actionLoading} style={{ fontSize: 13 }}>
+                  Gift received
+                </Button>
+              )}
             </div>
           </div>
           <div style={{ background: '#fff', border: '1px dashed #c3bba6', borderRadius: 8, padding: 48, textAlign: 'center' }}>
@@ -73,7 +85,7 @@ export default function DeliveriesTab({ app }) {
 
           <div style={{ marginTop: 20, background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 24 }}>
             <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 20, color: '#1c3b2c', margin: '0 0 4px' }}>Upcoming schedule</h3>
-            <p style={{ fontSize: 13, color: '#6f7566', margin: '0 0 16px' }}>You can cancel a future delivery up to 2 weeks in advance. The next two weeks are locked as they're already being harvested.</p>
+            <p style={{ fontSize: 13, color: '#6f7566', margin: '0 0 16px' }}>Four weeks are shown. Cancel a delivery until one week before it. If you don't cancel, that week is approved and locked. When a week closes, the next week appears.</p>
             <div className="ch-grid ch-grid-4" style={{ gap: 12 }}>
               {app.schedule.map((w, i) => (
                 <div key={i} style={styleObj(w.cardStyle)}>

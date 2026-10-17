@@ -17,13 +17,13 @@ export default function AddressPanel({ app }) {
           <FormError message={app.addrFormError} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <TextField label="Label" value={app.addrForm.label} onChange={app.onAddrLabel} placeholder="Home / Work" inputStyle={{ padding: '12px 14px' }} />
-            <TextField label="Address" value={app.addrForm.line} onChange={app.onAddrLine} placeholder="Flat, street, area" inputStyle={{ padding: '12px 14px' }} error={app.addrErrors?.line} />
+            <TextField label="Address" value={app.addrForm.line} onChange={app.onAddrLine} placeholder="Enter your address" inputStyle={{ padding: '12px 14px' }} error={app.addrErrors?.line} />
             <div className="ch-form-row">
               <div style={{ flex: 2, minWidth: 0 }}>
-                <TextField label="City" value={app.addrForm.city} onChange={app.onAddrCity} placeholder="Chennai" inputStyle={{ padding: '12px 14px' }} error={app.addrErrors?.city} />
+                <TextField label="City" value={app.addrForm.city} onChange={app.onAddrCity} placeholder="Enter your city" inputStyle={{ padding: '12px 14px' }} error={app.addrErrors?.city} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <TextField label="PIN" value={app.addrForm.pin} onChange={app.onAddrPin} placeholder="600020" inputStyle={{ padding: '12px 14px' }} error={app.addrErrors?.pin} inputMode="numeric" maxLength={6} />
+                <TextField label="PIN" value={app.addrForm.pin} onChange={app.onAddrPin} placeholder="Enter your PIN" inputStyle={{ padding: '12px 14px' }} error={app.addrErrors?.pin} inputMode="numeric" maxLength={6} />
               </div>
             </div>
           </div>

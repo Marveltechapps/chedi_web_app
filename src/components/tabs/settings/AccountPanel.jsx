@@ -10,8 +10,18 @@ export default function AccountPanel({ app }) {
         <DataRow k="Member since" v="Jul 2026" style={{ padding: '11px 0' }} />
         <DataRow k="Language" v="English" style={{ padding: '11px 0' }} />
         <DataRow k="Billing" v="Manual · pay bill each renewal" style={{ padding: '11px 0', borderBottom: 'none' }} />
+        {app.savedData && (
+          <div style={{ marginTop: 14, fontSize: 14, color: '#2e5a41', fontWeight: 600 }}>✓ Download started</div>
+        )}
         <div style={{ display: 'flex', gap: 12, marginTop: 14, flexWrap: 'wrap' }}>
-          <Button variant="outline" style={{ flex: 1, padding: 13, fontSize: 14 }}>Download my data</Button>
+          <Button
+            variant="outline"
+            style={{ flex: 1, padding: 13, fontSize: 14 }}
+            disabled={app.dataExporting}
+            onClick={app.downloadMyData}
+          >
+            {app.dataExporting ? 'Preparing…' : 'Download my data'}
+          </Button>
           <Button variant="outline" style={{ flex: 1, padding: 13, fontSize: 14 }} onClick={app.askLogout}>Log out</Button>
         </div>
       </div>

@@ -37,14 +37,14 @@ export default function JoinScreen({ app }) {
               <p style={{ fontSize: 15, color: '#6f7566', margin: '8px 0 24px' }}>We'll use these to send your welcome basket and schedule deliveries.</p>
               <FormError message={app.joinFormError} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <TextField label="Full name" value={app.form.name} onChange={app.onName} placeholder="Priya Balan" error={app.joinErrors?.name} autoComplete="name" />
+                <TextField label="Full name" value={app.form.name} onChange={app.onName} placeholder="Enter your name" error={app.joinErrors?.name} autoComplete="name" />
                 <div className="ch-form-row">
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <TextField
                       label="Mobile"
                       value={app.form.phone}
                       onChange={app.onPhone}
-                      placeholder="+91 98xxx xxxxx"
+                      placeholder="Enter your phone"
                       error={app.joinErrors?.phone}
                       inputMode="tel"
                       autoComplete="tel"
@@ -55,20 +55,20 @@ export default function JoinScreen({ app }) {
                       label="Email"
                       value={app.form.email}
                       onChange={app.onEmail}
-                      placeholder="you@email.com"
+                      placeholder="Enter your email"
                       error={app.joinErrors?.email}
                       type="email"
                       autoComplete="email"
                     />
                   </div>
                 </div>
-                <TextField label="Delivery address" value={app.form.address} onChange={app.onAddress} placeholder="Flat, street, neighborhood" error={app.joinErrors?.address} autoComplete="street-address" />
+                <TextField label="Delivery address" value={app.form.address} onChange={app.onAddress} placeholder="Enter your address" error={app.joinErrors?.address} autoComplete="street-address" />
                 <div className="ch-form-row">
                   <div style={{ flex: 2, minWidth: 0 }}>
-                    <TextField label="City" value={app.form.city} onChange={app.onCity} placeholder="Chennai" error={app.joinErrors?.city} autoComplete="address-level2" />
+                    <TextField label="City" value={app.form.city} onChange={app.onCity} placeholder="Enter your city" error={app.joinErrors?.city} autoComplete="address-level2" />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <TextField label="PIN" value={app.form.pin} onChange={app.onPin} placeholder="600020" error={app.joinErrors?.pin} inputMode="numeric" maxLength={6} autoComplete="postal-code" />
+                    <TextField label="PIN" value={app.form.pin} onChange={app.onPin} placeholder="Enter your PIN" error={app.joinErrors?.pin} inputMode="numeric" maxLength={6} autoComplete="postal-code" />
                   </div>
                 </div>
               </div>

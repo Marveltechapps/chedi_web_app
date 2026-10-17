@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { mediaUrl } from '../lib/apiBase.js'
 import { initialState } from '../logic/initialState.js'
 import { downloadReceipt, TERMS_TEXT, PRIVACY_TEXT } from '../logic/receipt.js'
 import Icon from '../components/icons/Icon.jsx'
@@ -61,6 +62,41 @@ function otpResendWaitSeconds(res) {
   const raw = Number(res?.resendAvailableInSeconds ?? res?.data?.resendAvailableInSeconds)
   if (Number.isFinite(raw) && raw >= OTP_RESEND_SECONDS) return Math.round(raw)
   return OTP_RESEND_SECONDS
+}
+
+function applyLivePlot(prev, plot) {
+  if (!plot || !plot.key) return prev
+  const current = prev.catalogs?.plots || []
+  const nextPlots = plot.deleted
+    ? current.filter((p) => p.key !== plot.key)
+    : current.some((p) => p.key === plot.key)
+      ? current.map((p) =>
+          p.key === plot.key
+            ? mapPlot({ ...plot, leasedByMe: p.leasedByMe, notifyRequested: p.notifyRequested })
+            : p
+        )
+      : current.concat(mapPlot(plot))
+  let myPlot = prev.myPlot
+  const owns =
+    myPlot &&
+    (myPlot.plot?.key === plot.key ||
+      (myPlot.subscriptions || []).some((s) => s.plotKey === plot.key))
+  if (owns && !plot.deleted) {
+    myPlot = {
+      ...myPlot,
+      heroImageUrl: plot.imageUrl || '',
+      gallery: Array.isArray(plot.gallery) ? plot.gallery : myPlot.gallery,
+      plot: myPlot.plot
+        ? { ...myPlot.plot, imageUrl: plot.imageUrl || '', gallery: plot.gallery || myPlot.plot.gallery }
+        : myPlot.plot,
+    }
+  }
+  return {
+    ...prev,
+    catalogs: { ...prev.catalogs, plots: nextPlots },
+    myPlot,
+    heroPlotImg: owns && !plot.deleted ? plot.imageUrl || '' : prev.heroPlotImg,
+  }
 }
 
 function errMessage(err, fallback = 'Something went wrong. Please try again.') {
@@ -132,8 +168,8 @@ export default function useChediApp() {
       },
       selectedPlot: prev.selectedPlot || defaultPlot,
       selectedPlan: prev.selectedPlan || defaultPlan,
-      heroPlotImg: defaultHero(),
-      welcomeImg: defaultWelcomeImg(),
+      heroPlotImg: prev.heroPlotImg || defaultHero(),
+      welcomeImg: prev.welcomeImg || defaultWelcomeImg(),
       notifiedPlots: plots.filter((p) => p.notifyRequested).map((p) => p.key),
     }))
     return { plans, plots }
@@ -369,6 +405,10 @@ export default function useChediApp() {
         }))
       }
 
+      if (event === 'plot:updated' && payload.plot) {
+        setState((prev) => applyLivePlot(prev, payload.plot))
+      }
+
       if (
         event.startsWith('payment') ||
         event.startsWith('subscription:') ||
@@ -388,6 +428,39 @@ export default function useChediApp() {
       if (memberReloadTimer.current) clearTimeout(memberReloadTimer.current)
     }
   }, [state.route, state.isMember])
+
+  useEffect(() => {
+    if (state.route !== 'app' || !state.isMember) return undefined
+    const refreshLivePlots = () => {
+      void loadCatalogs().catch(() => undefined)
+      void paymentsApi.history().then((hist) => {
+        if (!hist?.items) return
+        setState((prev) => ({
+          ...prev,
+          paymentHistory: hist.items,
+          pendingPayment: hist.items.some(
+            (p) => p.context === 'lease' && p.status === 'pending' && p.id === prev.pendingPayment?.id
+          )
+            ? prev.pendingPayment
+            : null,
+        }))
+      }).catch(() => undefined)
+      void subscriptionsApi.list().then((subsRes) => {
+        const subs = (subsRes.items || []).map(mapSubscription)
+        setState((prev) => ({ ...prev, subs, activeSub: prev.activeSub || subsRes.activeSubscriptionId || subs[0]?.id || null }))
+      }).catch(() => undefined)
+      const sub = stateRef.current.activeSub
+      if (!sub) return
+      myPlotApi
+        .get(sub)
+        .then((myPlot) => {
+          if (myPlot) setState((prev) => ({ ...prev, myPlot }))
+        })
+        .catch(() => undefined)
+    }
+    const timer = setInterval(refreshLivePlots, 4000)
+    return () => clearInterval(timer)
+  }, [state.route, state.isMember, loadCatalogs])
 
   // OTP resend countdown
   useEffect(() => {
@@ -440,39 +513,12 @@ export default function useChediApp() {
         error: '',
         paymentId: null,
         result: null,
-        nonRefundableAgreed: false,
       },
     })
   }
 
-  const requestPayConfirm = () => {
-    const p = stateRef.current.pay
-    patch({ pay: { ...p, view: 'confirm', error: '', nonRefundableAgreed: false } })
-  }
-
-  const backPayConfirm = () => {
-    const p = stateRef.current.pay
-    patch({ pay: { ...p, view: 'form', error: '', nonRefundableAgreed: false } })
-  }
-
-  const agreePayNonRefundable = () => {
-    const p = stateRef.current.pay
-    if (p.nonRefundableAgreed) return
-    patch({ pay: { ...p, nonRefundableAgreed: true, error: '' } })
-  }
-
   const submitPay = async () => {
     const p = stateRef.current.pay
-    if (!p.nonRefundableAgreed) {
-      patch({
-        pay: {
-          ...p,
-          view: 'confirm',
-          error: 'Please confirm that you have read and agree to the non-refundable condition.',
-        },
-      })
-      return
-    }
     patch({ pay: { ...p, view: 'processing', error: '' }, actionLoading: true })
     const body = buildPaymentBody()
     const key = newIdempotencyKey()
@@ -677,7 +723,7 @@ export default function useChediApp() {
     }))
 
     const growing = (s.myPlot?.growingNow || s.overview?.growingNow || []).map(mapGrowing)
-    const heroPlotImg = s.myPlot?.heroImageUrl || s.heroPlotImg || defaultHero()
+    const heroPlotImg = mediaUrl(s.myPlot?.heroImageUrl) || s.heroPlotImg || defaultHero()
     const welcomeImg = s.welcomeBasket?.imageUrl || s.welcomeImg || defaultWelcomeImg()
 
     const q = s.plotSearch.trim().toLowerCase()
@@ -729,13 +775,29 @@ export default function useChediApp() {
         dim: true,
       },
     }
+    const activeLeasePlots = new Set(
+      (s.subs || [])
+        .filter((sub) => ['active', 'past_due', 'paused'].includes(sub.status || 'active'))
+        .map((sub) => sub.plotKey)
+    )
+    const heldOtherPlots = (s.subs || []).filter(
+      (sub) =>
+        sub.plotKey &&
+        sub.plotKey !== s.selectedPlot &&
+        ['active', 'past_due', 'paused', 'payment_pending', 'pending_activation'].includes(sub.status || 'active')
+    ).length
     const pendingLeaseByPlot = {}
     ;(s.paymentHistory || []).forEach((pay) => {
-      if (pay.context === 'lease' && pay.status === 'pending' && pay.plotKey) {
+      if (
+        pay.context === 'lease' &&
+        pay.status === 'pending' &&
+        pay.plotKey &&
+        !activeLeasePlots.has(pay.plotKey)
+      ) {
         pendingLeaseByPlot[pay.plotKey] = pay
       }
     })
-    if (s.pendingPayment?.status === 'pending' && s.pendingPayment.plotKey) {
+    if (s.pendingPayment?.status === 'pending' && s.pendingPayment.plotKey && !activeLeasePlots.has(s.pendingPayment.plotKey)) {
       const histMatch = (s.paymentHistory || []).find((p) => p.id === s.pendingPayment.id)
       if (!histMatch || histMatch.status === 'pending') {
         pendingLeaseByPlot[s.pendingPayment.plotKey] = {
@@ -780,7 +842,25 @@ export default function useChediApp() {
         btnLabel,
         btnStyle: `width:100%;margin-top:16px;padding:12px;border-radius:2px;font-weight:600;font-size:14px;cursor:${avail || canViewPending || (isSoon && !notified) ? 'pointer' : 'default'};border:none;${isSoon && notified ? 'background:#eef2e9;color:#2e5a41' : m.btnCss}`,
         onSelect: avail
-          ? () => patch({ selectedPlot: p.key, leaseView: 'detail' })
+          ? async () => {
+              patch({ selectedPlot: p.key, leaseView: 'detail' })
+              try {
+                const fresh = await plotsApi.get(p.key)
+                const mapped = mapPlot(fresh)
+                if (!mapped?.key) return
+                setState((prev) => ({
+                  ...prev,
+                  catalogs: {
+                    ...prev.catalogs,
+                    plots: (prev.catalogs.plots || []).map((item) =>
+                      item.key === mapped.key ? { ...item, img: mapped.img, gallery: mapped.gallery } : item
+                    ),
+                  },
+                }))
+              } catch {
+                /* the list photo stays until the next refresh */
+              }
+            }
           : canViewPending
             ? () =>
                 patch({
@@ -812,10 +892,15 @@ export default function useChediApp() {
     const leasePlanCards = plans.map((p) => {
       const awaitingActivation = pendingPlanKeyOnSelected === p.key
       const plotPending = Boolean(pendingOnSelectedPlot)
+      const plotLimit = p.plotCount || (p.key === 'family12' ? 3 : p.key === 'family8' ? 2 : 1)
+      const overLimit = !plotPending && heldOtherPlots >= plotLimit
       const selected = s.selectedPlan === p.key
-      const locked = plotPending
+      const locked = plotPending || overLimit
       return {
         ...p,
+        plotCount: plotLimit,
+        overLimit,
+        limitLabel: `Up to ${plotLimit} plot${plotLimit === 1 ? '' : 's'}`,
         checked: selected,
         radio: selected ? '#1c3b2c' : '#c3bba6',
         awaitingActivation,
@@ -858,10 +943,10 @@ export default function useChediApp() {
       return {
         label: w.label,
         date: w.dateLabel || w.date,
-        note: cancelled ? 'Cancelled' : locked ? (w.note || 'Planned') + ' · locked' : w.note || 'Planned',
+        note: cancelled ? 'Cancelled' : locked ? 'Approved and locked' : 'Open to cancel',
         locked,
         cardStyle: `border:1px solid ${cancelled ? '#e6cfc7' : '#e4ded0'};border-radius:6px;padding:14px;background:${cancelled ? '#f7efec' : locked ? '#eef2e9' : '#faf8f2'}`,
-        btnLabel: cancelled ? 'Cancelled' : locked ? 'Locked' : 'Cancel',
+        btnLabel: cancelled ? 'Cancelled' : locked ? 'Approved' : 'Cancel',
         btnStyle: `width:100%;margin-top:12px;padding:8px;border-radius:2px;font-size:12px;font-weight:600;border:1px solid ${locked || cancelled ? '#dcd6c6' : '#e3b7ab'};background:none;color:${locked || cancelled ? '#9aa08d' : '#b0361f'};cursor:${locked || cancelled ? 'not-allowed' : 'pointer'}`,
         onCancel:
           locked || cancelled || !w.cancellable
@@ -942,18 +1027,20 @@ export default function useChediApp() {
       rowStyle: `display:flex;align-items:center;padding:12px 18px;font-size:14px;border-top:1px solid ${i === 0 ? 'transparent' : '#efe9db'}`,
     }))
 
-    const plotGallery = (() => {
-      const fromPlot = (curPlot.gallery || []).map((g, i) =>
-        typeof g === 'string' ? { label: `view ${i + 1}`, img: g } : { label: g.label || `view ${i + 1}`, img: g.img || g.imageUrl }
-      )
-      if (fromPlot.length) return fromPlot
-      const fromMyPlot = (s.myPlot?.gallery || []).map((g, i) => ({
-        label: g.label || `view ${i + 1}`,
-        img: g.imageUrl || g.img || g,
-      }))
-      if (fromMyPlot.length) return fromMyPlot
-      return defaultGallery()
-    })()
+    const asGallery = (list) =>
+      (list || [])
+        .map((g, i) => {
+          if (typeof g === 'string') return { label: `view ${i + 1}`, img: mediaUrl(g) }
+          return { label: g.label || `view ${i + 1}`, img: mediaUrl(g.img || g.imageUrl || '') }
+        })
+        .filter((g) => g.img)
+    const myPlotGallery = asGallery(s.myPlot?.gallery)
+    const selectedGallery = asGallery(curPlot.gallery)
+    const plotGallery = selectedGallery.length
+      ? selectedGallery
+      : myPlotGallery.length
+        ? myPlotGallery
+        : defaultGallery()
 
     return {
       bootLoading: s.bootLoading,
@@ -1260,8 +1347,27 @@ export default function useChediApp() {
       plotSizeLabel: actPlan ? actPlan.size : curPlan.size,
       welcomeEta: s.welcomeBasket?.etaLabel || 'Soon',
       welcomeAddr: s.form.city || 'your city',
+      welcomeReceived: ['received', 'delivered'].includes(s.welcomeBasket?.status),
+      welcomeGiftError: s.welcomeGiftError || '',
       welcomeOpen: s.welcomeTrack,
       openWelcome: () => patch({ welcomeTrack: true }),
+      confirmWelcomeGift: async () => {
+        const current = stateRef.current.welcomeBasket
+        if (['received', 'delivered'].includes(current?.status)) return
+        patch({ actionLoading: true, welcomeGiftError: '' })
+        try {
+          const res = await membershipApi.receiveWelcome()
+          const welcomeBasket = res.welcomeBasket || { ...(current || {}), status: 'received' }
+          patch({
+            actionLoading: false,
+            welcomeGiftError: '',
+            welcomeBasket,
+            overview: { ...(stateRef.current.overview || {}), welcomeBasket },
+          })
+        } catch (err) {
+          patch({ actionLoading: false, welcomeGiftError: errMessage(err, 'Could not mark the gift as received.') })
+        }
+      },
       closeWelcome: () => patch({ welcomeTrack: false }),
       logoutOpen: s.logoutConfirm,
       askLogout: () => patch({ logoutConfirm: true }),
@@ -1367,6 +1473,7 @@ export default function useChediApp() {
       selPlotName: curPlot.name,
       selPlotFacts,
       plotGallery,
+      myPlotGallery: myPlotGallery.length ? myPlotGallery : plotGallery,
       leasePlanCards,
       leasePlanPending: Boolean(pendingOnSelectedPlot),
       leaseAwaitingPlanKey: pendingPlanKeyOnSelected,
@@ -1422,6 +1529,14 @@ export default function useChediApp() {
         }
       },
       toReview: async () => {
+        const chosen = plans.find((p) => p.key === s.selectedPlan)
+        const chosenLimit = chosen?.plotCount || (chosen?.key === 'family12' ? 3 : chosen?.key === 'family8' ? 2 : 1)
+        if (!pendingOnSelectedPlot && heldOtherPlots >= chosenLimit) {
+          patch({
+            globalError: `${chosen?.name || 'This plan'} allows ${chosenLimit} plot${chosenLimit === 1 ? '' : 's'}. Choose a larger plan.`,
+          })
+          return
+        }
         if (pendingOnSelectedPlot) {
           patch({
             globalError:
@@ -1453,14 +1568,9 @@ export default function useChediApp() {
       payOpen: s.pay.open,
       payAmount: s.pay.amount,
       payForm: s.pay.view === 'form',
-      payConfirm: s.pay.view === 'confirm',
       payProcessing: s.pay.view === 'processing',
       paySuccess: s.pay.view === 'success',
       payError: s.pay.error,
-      payNonRefundableAgreed: Boolean(s.pay.nonRefundableAgreed),
-      requestPayConfirm: () => requestPayConfirm(),
-      backPayConfirm: () => backPayConfirm(),
-      agreePayNonRefundable: () => agreePayNonRefundable(),
       paySuccessMessage:
         s.pay.result?.notice ||
         (s.pay.result?.payment?.ref
@@ -1511,7 +1621,7 @@ export default function useChediApp() {
       confirmOpen: !!s.confirm,
       confirmTitle: 'Cancel this delivery?',
       confirmBody:
-        'This upcoming weekly delivery will be cancelled. You can cancel deliveries up to 2 weeks in advance; the next two weeks stay locked.',
+        'This delivery will be cancelled. You can cancel until one week before the delivery date. After that the week is approved and locked.',
       confirmLabel: 'Cancel delivery',
       confirmYesStyle:
         'flex:1;border:none;padding:13px;border-radius:2px;font-weight:600;font-size:15px;cursor:pointer;color:#f6f3ea;background:#b0361f',
@@ -1569,6 +1679,32 @@ export default function useChediApp() {
       savedNotif: s.saved === 'notifications',
       savedAddress: s.saved === 'address',
       savedSecurity: s.saved === 'security',
+      savedData: s.saved === 'data',
+      dataExporting: s.dataExporting,
+      downloadMyData: async () => {
+        if (stateRef.current.dataExporting) return
+        patch({ dataExporting: true, globalError: '' })
+        try {
+          const created = await meApi.requestDataExport()
+          if (!created?.exportId) throw new Error('Could not prepare your data export.')
+          const data = await meApi.downloadDataExport(created.exportId)
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          const code = s.member?.memberCode || s.memberId || 'member'
+          a.href = url
+          a.download = `chedi-data-${code}.json`
+          document.body.appendChild(a)
+          a.click()
+          a.remove()
+          setTimeout(() => URL.revokeObjectURL(url), 1000)
+          flash('data')
+        } catch (err) {
+          patch({ globalError: errMessage(err, 'Could not download your data. Please try again.') })
+        } finally {
+          patch({ dataExporting: false })
+        }
+      },
       profView: s.profileMode === 'view',
       profEdit: s.profileMode === 'edit',
       profOtp: s.profileMode === 'otp',

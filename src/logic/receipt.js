@@ -34,7 +34,7 @@ export function uid() {
 export const TERMS_TEXT = [
   'Membership: A one-time ₹500 fee activates your CHEDI Farm Club membership and includes a complimentary welcome basket. Membership is non-transferable.',
   'Plot lease & subscription: Leasing a plot requires an annual subscription paid in advance. The lease grants you the harvest from a dedicated 600 sq ft plot, fully managed by CHEDI farmers.',
-  'Deliveries: Weekly deliveries run for the plan period. Individual future deliveries may be cancelled up to 2 weeks in advance; the immediate next two weeks are locked as produce is already being harvested.',
+  'Deliveries: Weekly deliveries run for the plan period. The next four weeks are shown. A delivery can be cancelled until one week before its date. If it is not cancelled, that week is approved and locked. When a week closes, the following week is added.',
   'Billing & renewal: Billing is manual. A renewal bill is generated at the end of the plan year and must be paid to continue deliveries. There is no automatic charge.',
   'Crop assurance: If a variety underperforms on your plot, CHEDI supplements the basket from adjacent plots on the same farm at no extra cost.',
   'Liability: CHEDI is not liable for delays caused by weather, natural events, or circumstances beyond reasonable control. These terms are governed by the laws of Tamil Nadu, India.',

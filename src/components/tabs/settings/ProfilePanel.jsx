@@ -29,8 +29,8 @@ export default function ProfilePanel({ app }) {
         <>
           <FormError message={app.profileFormError} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <TextField label="Full name" value={app.draftName} onChange={app.onDraftName} placeholder="Your name" inputStyle={{ padding: '12px 14px' }} error={app.draftErrors?.name} />
-            <TextField label="Email" value={app.draftEmail} onChange={app.onDraftEmail} type="email" placeholder="you@email.com" inputStyle={{ padding: '12px 14px' }} error={app.draftErrors?.email} />
+            <TextField label="Full name" value={app.draftName} onChange={app.onDraftName} placeholder="Enter your name" inputStyle={{ padding: '12px 14px' }} error={app.draftErrors?.name} />
+            <TextField label="Email" value={app.draftEmail} onChange={app.onDraftEmail} type="email" placeholder="Enter your email" inputStyle={{ padding: '12px 14px' }} error={app.draftErrors?.email} />
           </div>
           <div className="ch-actions" style={{ marginTop: 24 }}>
             <Button variant="outline" style={{ padding: '13px 24px', fontSize: 15 }} onClick={app.cancelProfile}>Cancel</Button>

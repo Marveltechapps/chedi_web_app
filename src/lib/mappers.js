@@ -1,3 +1,4 @@
+import { mediaUrl } from './apiBase.js'
 import { vegImg } from '../data/vegImages.js'
 import { HERO_PLOT_IMG, WELCOME_IMG, PLOT_GALLERY_4 } from '../data/plots.js'
 
@@ -15,10 +16,10 @@ export function mapPlot(p) {
     crop: p.crop,
     total: p.totalUnits ?? p.total ?? 0,
     available: p.availableUnits ?? p.available ?? 0,
-    img: p.imageUrl || p.img || HERO_PLOT_IMG,
+    img: mediaUrl(p.imageUrl || p.img) || HERO_PLOT_IMG,
     leasedByMe: Boolean(p.leasedByMe),
     notifyRequested: Boolean(p.notifyRequested),
-    gallery: (p.gallery || []).map((g) => g.imageUrl || g.img).filter(Boolean),
+    gallery: (p.gallery || []).map((g) => mediaUrl(g.imageUrl || g.img)).filter(Boolean),
     soil: p.soil,
     cropCycle: p.cropCycle,
   }
@@ -40,6 +41,7 @@ export function mapPlan(p) {
     deliveryChargeFormatted: p.deliveryChargeFormatted,
     deliveryChargeInr: p.deliveryChargeInr,
     features: p.features || [],
+    plotCount: p.plotCount || (p.key === 'family12' ? 3 : p.key === 'family8' ? 2 : 1),
   }
 }
 

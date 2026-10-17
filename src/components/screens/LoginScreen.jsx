@@ -27,7 +27,7 @@ export default function LoginScreen({ app }) {
                   onChange={app.onLoginEmail}
                   type="email"
                   autoComplete="email"
-                  placeholder="you@email.com"
+                  placeholder="Enter your email"
                   error={app.otpError}
                 />
                 <Button variant="primary" style={{ width: '100%', marginTop: 20, padding: 15, fontSize: 16 }} onClick={app.sendOtp} disabled={app.actionLoading}>
