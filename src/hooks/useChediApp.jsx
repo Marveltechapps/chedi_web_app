@@ -409,6 +409,18 @@ export default function useChediApp() {
         setState((prev) => applyLivePlot(prev, payload.plot))
       }
 
+      if (event === 'delivery:updated' || event === 'basket:updated' || event === 'cancellation:updated') {
+        const sub = stateRef.current.activeSub
+        if (sub) {
+          void deliveriesApi
+            .list(sub)
+            .then((deliveries) => {
+              if (deliveries) setState((prev) => ({ ...prev, deliveries }))
+            })
+            .catch(() => undefined)
+        }
+      }
+
       if (
         event.startsWith('payment') ||
         event.startsWith('subscription:') ||
@@ -451,6 +463,12 @@ export default function useChediApp() {
       }).catch(() => undefined)
       const sub = stateRef.current.activeSub
       if (!sub) return
+      void deliveriesApi
+        .list(sub)
+        .then((deliveries) => {
+          if (deliveries) setState((prev) => ({ ...prev, deliveries }))
+        })
+        .catch(() => undefined)
       myPlotApi
         .get(sub)
         .then((myPlot) => {
@@ -930,6 +948,9 @@ export default function useChediApp() {
           ]
         : [])
 
+    const deliveryStatusLabel = s.deliveries?.currentWeek?.statusLabel || 'Scheduled'
+    const deliveryStatusTone = s.deliveries?.currentWeek?.statusTone || 'neutral'
+    const deliveryDateLabel = s.deliveries?.currentWeek?.dateLabel || s.deliveries?.currentWeek?.date || ''
     const deliverySteps = (s.deliveries?.currentWeek?.tracking || []).map((d) => ({
       title: d.title,
       time: dateOnlyTrackingLabel(d.timeLabel || d.time),
@@ -943,7 +964,7 @@ export default function useChediApp() {
       return {
         label: w.label,
         date: w.dateLabel || w.date,
-        note: cancelled ? 'Cancelled' : locked ? 'Approved and locked' : 'Open to cancel',
+        note: w.note || (cancelled ? 'Cancelled' : locked ? 'Approved and locked' : 'Open to cancel'),
         locked,
         cardStyle: `border:1px solid ${cancelled ? '#e6cfc7' : '#e4ded0'};border-radius:6px;padding:14px;background:${cancelled ? '#f7efec' : locked ? '#eef2e9' : '#faf8f2'}`,
         btnLabel: cancelled ? 'Cancelled' : locked ? 'Approved' : 'Cancel',
@@ -1592,6 +1613,9 @@ export default function useChediApp() {
         'your plan',
 
       myPlotFacts,
+      deliveryStatusLabel,
+      deliveryStatusTone,
+      deliveryDateLabel,
       deliverySteps,
       basket,
       schedule,

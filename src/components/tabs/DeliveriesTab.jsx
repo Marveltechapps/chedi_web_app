@@ -51,8 +51,15 @@ export default function DeliveriesTab({ app }) {
           <div className="ch-grid ch-grid-deliveries" style={{ gap: 20, alignItems: 'start' }}>
             <div style={{ background: '#fff', border: '1px solid #e4ded0', borderRadius: 8, padding: 26 }}>
               <div className="ch-page-head">
-                <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 22, color: '#1c3b2c', margin: 0 }}>This week's delivery</h3>
-                <Badge tone="amber" style={{ padding: '4px 10px' }}>Out for delivery soon</Badge>
+                <div>
+                  <h3 style={{ fontFamily: "'Newsreader',serif", fontWeight: 500, fontSize: 22, color: '#1c3b2c', margin: 0 }}>This week's delivery</h3>
+                  {app.deliveryDateLabel && (
+                    <div style={{ fontSize: 13, color: '#6f7566', marginTop: 4 }}>{app.deliveryDateLabel}</div>
+                  )}
+                </div>
+                <Badge tone={app.deliveryStatusTone || 'neutral'} style={{ padding: '4px 10px' }}>
+                  {app.deliveryStatusLabel || 'Scheduled'}
+                </Badge>
               </div>
               <div style={{ marginTop: 24 }}>
                 <ProgressTimeline steps={app.deliverySteps} />
@@ -67,12 +74,7 @@ export default function DeliveriesTab({ app }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {app.basket.map((b, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '9px 0', borderBottom: '1px solid #efe9db' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: 4, overflow: 'hidden', border: '1px solid #cdd5be' }}>
-                        <img src={b.img} alt={b.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                      </div>
-                      <span style={{ fontSize: 14, color: '#1c3b2c', fontWeight: 500 }}>{b.name}</span>
-                    </div>
+                    <span style={{ fontSize: 14, color: '#1c3b2c', fontWeight: 500 }}>{b.name}</span>
                     <span style={{ fontFamily: "'Space Mono',monospace", fontSize: 13, color: '#6f7566' }}>{b.qty}</span>
                   </div>
                 ))}

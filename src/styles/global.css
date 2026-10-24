@@ -130,6 +130,56 @@ textarea {
   }
 }
 
+@keyframes chShimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.ch-skel {
+  display: block;
+  background: linear-gradient(90deg, #ddd4c0 0%, #f4efe3 42%, #cfc4ae 78%);
+  background-size: 220% 100%;
+  animation: chShimmer 1.35s ease-in-out infinite;
+}
+
+.ch-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ch-skel-dark {
+  display: block;
+  background: linear-gradient(90deg, #2a4a38 0%, #3d6250 42%, #2a4a38 78%);
+  background-size: 220% 100%;
+  animation: chShimmer 1.35s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ch-skel,
+  .ch-skel-dark {
+    animation: none;
+  }
+
+  .ch-skel {
+    background: #ddd4c0;
+  }
+
+  .ch-skel-dark {
+    background: #2a4a38;
+  }
+}
+
 .ch-fade {
   animation: chFade 0.3s ease both;
 }

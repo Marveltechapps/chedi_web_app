@@ -1,7 +1,9 @@
 import useChediApp from './hooks/useChediApp.jsx'
+import { hasSession } from './lib/session.js'
 import LoginScreen from './components/screens/LoginScreen.jsx'
 import JoinScreen from './components/screens/JoinScreen.jsx'
 import AppShell from './components/layout/AppShell.jsx'
+import { AppBootSkeleton, AuthBootSkeleton } from './components/ui/Skeleton.jsx'
 import ConfirmModal from './components/modals/ConfirmModal.jsx'
 import WelcomeTrackingModal from './components/modals/WelcomeTrackingModal.jsx'
 import PaymentSheetModal from './components/modals/PaymentSheetModal.jsx'
@@ -10,14 +12,7 @@ export default function App() {
   const app = useChediApp()
 
   if (app.bootLoading) {
-    return (
-      <div style={{ minHeight: '100vh', background: '#f6f3ea', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Newsreader',serif", fontSize: 28, letterSpacing: '.14em', color: '#1c3b2c' }}>CHEDI</div>
-          <div style={{ marginTop: 12, fontSize: 14, color: '#6f7566' }}>Loading your Farm Club…</div>
-        </div>
-      </div>
-    )
+    return hasSession() ? <AppBootSkeleton /> : <AuthBootSkeleton />
   }
 
   return (
